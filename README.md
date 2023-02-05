@@ -1,6 +1,7 @@
 # temper-monkey
 
 ##1
+```
 (function () {
     'use strict';
     const okooraLink = 'https://stage.okoora.com/';
@@ -38,9 +39,10 @@
         });
     };
 })();
-
+```
 
 ## 2
+```
 (function () {
     'use strict';
     window.onload = function(e) {
@@ -52,9 +54,9 @@
         });
     };
 })();
-
+```
 ## 3
-
+```
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
@@ -86,3 +88,4 @@
         link.href = 'https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/5e245a50a7b9540e76f40540/4bbf50a7-ae7f-4338-a30e-942227d3dfd8/48';
     };
 })();
+```
