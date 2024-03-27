@@ -90,6 +90,7 @@
 })();
 ```
 ## 4
+```
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
@@ -144,3 +145,4 @@ element.classList.add("modified");
     }
     // Your code here...
 })();
+```
