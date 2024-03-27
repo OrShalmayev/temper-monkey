@@ -118,7 +118,32 @@ const select = document.querySelector;
         "Have you considered using a generator expression?",
         "I'm not sure, but your CSS selector might need more specificity.",
         "This is the perfect use case for a monad, obviously.",
-        "The answer lies within the depths of the documentation."
+        "The answer lies within the depths of the documentation.",
+ "You may want to look into memoization to optimize those repeated calculations.",
+  "It sounds like you're encountering a race condition here.",
+  "Have you checked for any floating point precision issues?",
+  "This could be simplified with a list comprehension.",
+  "Might be time to consider multithreading to handle the workload.",
+  "You probably need to debounce or throttle that function to prevent it from firing too often.",
+  "It seems like you're dealing with a CORS issue if it's a web request problem.",
+  "Have you set the proper environment variables for your application?",
+  "That's a typical scope issue; make sure your variables are declared in the right context.",
+  "You might be hitting the API rate limit, consider implementing a retry strategy.",
+  "Using a service worker could help cache those assets and improve load times.",
+  "That sounds like a job for a regular expression to parse that string.",
+  "Perhaps you should look into lazy loading that module for better efficiency.",
+  "You could use a web worker to offload that heavy computation and keep the UI responsive.",
+  "Maybe a switch statement would be cleaner than multiple if-else chains here.",
+  "Sounds like you might benefit from some unit tests to isolate the issue.",
+  "You should probably normalize your database tables to avoid redundancy.",
+  "Are you sure you don't have a memory leak in your application?",
+  "Consider using async/await for more readable asynchronous code.",
+  "It looks like you could use a design pattern here, maybe the Strategy or Observer pattern.",
+  "Have you thought about using a virtual DOM library to minimize re-renders?",
+  "It could be helpful to profile your code and identify the performance bottlenecks.",
+  "Have you tried using a different serializer to handle that data format?",
+  "You might want to use a CDN to serve those static assets faster globally.",
+  "It's possible that you're experiencing a Heisenbug; it behaves differently when trying to diagnose it."
     ];
 
     // Function to get a random code-related answer
