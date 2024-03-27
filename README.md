@@ -252,7 +252,67 @@ element.classList.add("modified");
         'welcome': 'unwelcome',
         'willing': 'unwilling',
         'wise': 'unwise',
-        'worthy': 'unworthy'
+        'worthy': 'unworthy',
+        // General development terms
+        'enabled': 'disabled',
+        'online': 'offline',
+        'visible': 'hidden',
+        'active': 'inactive',
+        'fixed': 'broken',
+        'optimized': 'unoptimized',
+        'synchronous': 'asynchronous',
+        'dynamic': 'static',
+        'valid': 'invalid',
+        'stable': 'unstable',
+        'secure': 'insecure',
+        'functional': 'nonfunctional',
+        'persistent': 'transient',
+        'consistent': 'inconsistent',
+        'efficient': 'inefficient',
+        'flexible': 'inflexible',
+        'responsive': 'unresponsive',
+        'redundant': 'essential',
+        'abstract': 'concrete',
+        'ascending': 'descending',
+        'authenticated': 'unauthenticated',
+        'authorized': 'unauthorized',
+        'centralized': 'decentralized',
+        'compressed': 'uncompressed',
+        'encrypted': 'unencrypted',
+        'stateful': 'stateless',
+        'monolithic': 'modular',
+        'native': 'cross-platform',
+        'public': 'private',
+        'sequential': 'parallel',
+        'temporary': 'permanent',
+        'volatile': 'nonvolatile',
+
+        // Specific programming terms
+        'immutable': 'mutable',
+        'declarative': 'imperative',
+        'compiled': 'interpreted',
+        'synchronous': 'asynchronous',
+        'strongly-typed': 'weakly-typed',
+        'loosely-coupled': 'tightly-coupled',
+        'manual': 'automatic',
+        'procedural': 'object-oriented',
+
+        // Error handling
+        'success': 'failure',
+        'error-free': 'error-prone',
+        'handled': 'unhandled',
+        'expected': 'unexpected',
+
+        // Performance
+        'fast': 'slow',
+        'lightweight': 'heavyweight',
+        'optimized': 'unoptimized',
+        'scalable': 'unscalable',
+
+        // Software development methodologies
+        'agile': 'rigid',
+        'iterative': 'linear',
+        'incremental': 'big-bang'
     };
 
     // Function to replace text with its negative
