@@ -89,3 +89,58 @@
     };
 })();
 ```
+## 4
+// ==UserScript==
+// @name         New Userscript
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match      *://*/*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// ==/UserScript==
+const selectAll=document.querySelectorAll;
+const select = document.querySelector;
+(function() {
+    'use strict';
+    window.onload = function(){
+    const codeRelatedAnswers = [
+        "It's definitely a problem with the recursion base case.",
+        "Have you tried turning it off and on again?",
+        "I think you need to refactor this into a separate function.",
+        "Sounds like a classic off-by-one error to me.",
+        "You should consider using a hashmap for better performance.",
+        "That's an interesting question, but have you heard about Big O notation?",
+        "It looks like a classic case of mutable default arguments.",
+        "Just wrap it in a try...catch block and it'll be fine.",
+        "Have you considered using a generator expression?",
+        "I'm not sure, but your CSS selector might need more specificity.",
+        "This is the perfect use case for a monad, obviously.",
+        "The answer lies within the depths of the documentation."
+    ];
+
+    // Function to get a random code-related answer
+    function getRandomCodeRelatedAnswer() {
+        const randomIndex = Math.floor(Math.random() * codeRelatedAnswers.length);
+        return codeRelatedAnswers[randomIndex];
+    }
+        const id = setInterval(()=>{
+            document.querySelectorAll('#messages .message.by-assistant .inner:not(.modified)').forEach(element=>{
+element.classList.add("modified");
+                element.innerHTML = `
+                <div class="metadata"><span><strong>ChatGPT (GPT 4 Turbo)<span class="css-xh24x">:</span></strong></span><button class="mantine-UnstyledButton-root mantine-Button-root mantine-wdnt69" type="button" data-button="true"><div class="mantine-3xbgk5 mantine-Button-inner"><span class="mantine-qo1k2 mantine-Button-label"><i class="fa fa-headphones"></i><span>Play</span></span></div></button><div style="flex-grow: 1;"></div><button class="mantine-UnstyledButton-root mantine-Button-root mantine-wdnt69" type="button" data-button="true" style="margin-left: 1rem;"><div class="mantine-3xbgk5 mantine-Button-inner"><span class="mantine-qo1k2 mantine-Button-label"><i class="fa fa-clipboard"></i><span>Copy</span></span></div></button><button class="mantine-UnstyledButton-root mantine-Button-root mantine-wdnt69" type="button" data-button="true"><div class="mantine-3xbgk5 mantine-Button-inner"><span class="mantine-qo1k2 mantine-Button-label"><i class="fa fa-refresh"></i><span>Regenerate</span></span></div></button></div>
+                <div>
+                <p style="
+                max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;">${getRandomCodeRelatedAnswer()}</p>
+                </div>
+                `
+            })
+        }, 1000)
+
+
+    }
+    // Your code here...
+})();
