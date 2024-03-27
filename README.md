@@ -171,3 +171,110 @@ element.classList.add("modified");
     // Your code here...
 })();
 ```
+
+## 5
+
+```
+(function () {
+    'use strict';
+
+    // Mapping of words to their negatives
+    const negatives = {
+        'visible': 'invisible',
+        'possible': 'impossible',
+        'adequate': 'inadequate',
+        'regular': 'irregular',
+        'responsible': 'irresponsible',
+        'rational': 'irrational',
+        'moral': 'immoral',
+        'legal': 'illegal',
+        'patient': 'impatient',
+        'perfect': 'imperfect',
+        'polite': 'impolite',
+        'balance': 'imbalance',
+        'mature': 'immature',
+        'partial': 'impartial',
+        'pure': 'impure',
+        'modest': 'immodest',
+        'mortal': 'immortal',
+        'mobile': 'immobile',
+        'honest': 'dishonest',
+        'loyal': 'disloyal',
+        'obedient': 'disobedient',
+        'orderly': 'disorderly',
+        'similar': 'dissimilar',
+        'satisfied': 'dissatisfied',
+        'continue': 'discontinue',
+        'connect': 'disconnect',
+        'content': 'discontent',
+        'agree': 'disagree',
+        'appear': 'disappear',
+        'approve': 'disapprove',
+        'belief': 'disbelief',
+        'please': 'displease',
+        'respect': 'disrespect',
+        'trust': 'distrust',
+        'happy': 'unhappy',
+        'kind': 'unkind',
+        'lucky': 'unlucky',
+        'able': 'unable',
+        'tidy': 'untidy',
+        'true': 'untrue',
+        'well': 'unwell',
+        'fair': 'unfair',
+        'fit': 'unfit',
+        'fortunate': 'unfortunate',
+        'friendly': 'unfriendly',
+        'healthy': 'unhealthy',
+        'helpful': 'unhelpful',
+        'known': 'unknown',
+        'like': 'unlike',
+        'necessary': 'unnecessary',
+        'real': 'unreal',
+        'comfortable': 'uncomfortable',
+        'common': 'uncommon',
+        'conscious': 'unconscious',
+        'finished': 'unfinished',
+        'forgiving': 'unforgiving',
+        'grateful': 'ungrateful',
+        'interested': 'uninterested',
+        'successful': 'unsuccessful',
+        'usual': 'unusual',
+        'important': 'unimportant',
+        'popular': 'unpopular',
+        'pleasant': 'unpleasant',
+        'productive': 'unproductive',
+        'professional': 'unprofessional',
+        'reliable': 'unreliable',
+        'safe': 'unsafe',
+        'stable': 'unstable',
+        'steady': 'unsteady',
+        'welcome': 'unwelcome',
+        'willing': 'unwilling',
+        'wise': 'unwise',
+        'worthy': 'unworthy'
+    };
+
+    // Function to replace text with its negative
+    function replaceWithNegative(element) {
+        const words = element.textContent.match(/\w+/g) || [];
+        const newText = words.map(word => {
+            const lowerCaseWord = word.toLowerCase();
+            return negatives[lowerCaseWord] ? negatives[lowerCaseWord] : word;
+        }).join(' ');
+
+        if (newText !== element.textContent) {
+            console.log('Original:', element.textContent);
+            console.log('Replaced:', newText);
+            element.textContent = newText;
+        }
+    }
+
+    window.onload = function (e) {
+        document.querySelectorAll('p,span,a,h1,h2,h3,h4,h5,h6,li,div').forEach(element => {
+            replaceWithNegative(element);
+        });
+    };
+})();
+
+```
