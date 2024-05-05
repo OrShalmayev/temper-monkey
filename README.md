@@ -4,7 +4,7 @@
 ```
 (function () {
     'use strict';
-    const okooraLink = 'https://stage.okoora.com/';
+    const okooraLink = 'https://stage.test.com/';
     const stepper = {step: 0}
     const copiedWords = ['var idiot = "you"'];
     const hoverdLinks = [
