@@ -389,8 +389,7 @@ function parseAlgorithm(data) {
   popup.style.cssText = `
     position: fixed;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    right: 0%;
     background-color: white;
     padding: 20px;
     font-family: monospace; /* Use monospace font for code readability */
