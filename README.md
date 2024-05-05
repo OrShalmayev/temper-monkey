@@ -388,8 +388,8 @@ function parseAlgorithm(data) {
   const popup = document.createElement("div");
   popup.style.cssText = `
     position: fixed;
-    top: 50%;
-    right: 0%;
+    top: 0;
+    right: 0;
     background-color: white;
     padding: 20px;
     font-family: monospace; /* Use monospace font for code readability */
@@ -421,8 +421,14 @@ function parseAlgorithm(data) {
 
   // Optionally, add a close button
   const closeButton = document.createElement("button");
+     closeButton.style.cssText=`
+     position:absolute;
+     right:0;
+     top:0;
+     `
   closeButton.textContent = "Close";
   closeButton.onclick = () => document.body.removeChild(popup);
   popup.appendChild(closeButton);
 }
 })();
+
