@@ -432,3 +432,150 @@ function parseAlgorithm(data) {
 }
 })();
 
+
+### 7 Random javascript algorithm:
+```js
+// ==UserScript==
+// @name        Random Algorithm Popup (Enhanced Readability)
+// @namespace   https://tampermonkey.net/
+// @version     0.7
+// @description Shows a random algorithm question with clear code formatting when opening a new tab
+// @author      you
+// @match       https://*/*
+// @grant       GM_xmlhttpRequest
+// ==/UserScript==
+
+(function() {
+
+
+  // Script logic
+  const url = "https://raw.githubusercontent.com/sudheerj/javascript-interview-questions/master/README.md";
+  fetch(url)
+    .then(response => response.text())
+    .then(data => {
+      const randomAlgorithm = parseAlgorithm(data);
+      showPopup(randomAlgorithm);
+    })
+    .catch(error => console.error("Error fetching algorithm:", error));
+    function getRandomItem(items) {
+        return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function fetchGithubContent(url) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                headers: {
+                    "User-Agent": "Mozilla/5.0", // Required by GitHub API
+                    "Accept": "application/vnd.github.v3+json" // Required to get JSON response
+                },
+                onload: function(response) {
+                    resolve(JSON.parse(response.responseText));
+                },
+                onerror: function(error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    // Script logic
+    const repoUrl = "https://api.github.com/repos/TheAlgorithms/JavaScript/contents";
+    fetchGithubContent(repoUrl)
+        .then(contents => {
+            const directories = contents.filter(item => item.type === "dir");
+            const randomDir = getRandomItem(directories);
+            return fetchGithubContent(randomDir.url);
+        })
+        .then(files => {
+            const randomFile = getRandomItem(files);
+            return fetchGithubContent(randomFile.url);
+        })
+        .then(fileContent => {
+            //const decodedContent = atob(fileContent.content); // Decode the base64 content
+        const blob = new Blob([fileContent.content], {type: 'application/octet-stream'});
+const reader = new FileReader();
+reader.onload = function() {
+    const decodedContent = reader.result;
+    const text = new TextDecoder("utf-8").decode(Uint8Array.from(atob(decodedContent), c => c.charCodeAt(0)));
+    showPopup(text);
+};
+const asText= reader.readAsText(blob);
+            showPopup(decodedContent);
+        })
+        .catch(error => console.error("Error fetching algorithm:", error));
+
+    // region utils
+
+ function showPopup(algorithm) {
+  const popup = document.createElement("div");
+  popup.style.cssText = `
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: white;
+    padding: 20px;
+    font-family: monospace; /* Use monospace font for code readability */
+    font-size: 13px;
+    border: 1px solid black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    max-width: 800px; /* Optional: Set a maximum width for longer questions */
+    overflow-wrap: break-word; /* Allow text wrapping for better line breaks */
+    color: #000;
+        white-space: pre-wrap;
+
+  `;
+
+  // Create a pre element and a code element
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+
+  // Set the text of the code element to the algorithm
+  code.textContent = algorithm;
+
+  // Append the code element to the pre element
+  pre.appendChild(code);
+
+  // Append the pre element to the popup
+  popup.innerHTML = algorithm;
+
+  document.body.appendChild(popup);
+
+  // Optionally, add a close button
+  const closeButton = document.createElement("button");
+     closeButton.style.cssText=`
+     position:absolute;
+     right:0;
+     top:0;
+     `
+  closeButton.textContent = "Close";
+  closeButton.onclick = () => document.body.removeChild(popup);
+  popup.appendChild(closeButton);
+}
+    function parseAlgorithm(data) {
+  const lines = data.split(". ###");
+  const selectedAlgo = lines[Math.floor(Math.random() * lines.length)]; // Choose a random line
+  console.log('selectedAlgo',selectedAlgo)
+
+  // Use regex to extract the text within the triple backticks
+  const regex = /```([^`]+)```/gs;
+  const matches = selectedAlgo.match(regex);
+
+  if (matches) {
+  let newText = selectedAlgo;
+  matches.forEach(match => {
+    const codeBlock = match.replace(/```/g, '').trim(); // Remove the backticks
+    newText = newText.replace(match, `<pre><code>${codeBlock}</code></pre>`);
+  });
+    return newText;
+  } else {
+    // If no code block found, return the original line
+    return selectedAlgo;
+  }
+}
+    // endregion utils
+})();
+
+```
