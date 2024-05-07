@@ -1,4 +1,14 @@
 # temper-monkey
+# temper-monkey
+
+- [1](#1)
+- [2](#2)
+- [3](#3)
+- [4](#4)
+- [5](#5)
+- [6](#6)
+- [7 Random javascript algorithm](#7-random-javascript-algorithm)
+- [8](#8)
 
 ## 1
 ```
