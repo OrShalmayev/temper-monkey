@@ -1,5 +1,4 @@
 # temper-monkey
-# temper-monkey
 
 - [1](#1)
 - [2](#2)
