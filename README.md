@@ -631,8 +631,39 @@ const asText= reader.readAsText(blob);
 
 
         // Add the reviewer element to the "Reviewers" section
-        reviewersSection.prepend(reviewerElement);
+        reviewersSection?.prepend(reviewerElement);
+
+
+
+
+            // Your custom name and image URL
+    const customName = "Or Shalmayev";
+    const customImageUrl = "https://avatars.githubusercontent.com/u/46129649?s=60&v=4";
+
+    // Wait for the DOM to be fully loaded
+        setInterval(()=>{
+
+            // Find the reporter's image element by its class name and change the `src` attribute
+            const imageElements = document.querySelectorAll('[data-testid*="profilecard-next.ui.profilecard.profilecard-trigger"] img');
+            if (imageElements) {
+                Array.from(imageElements)?.forEach((img, i)=>{
+                    if(i===Array.from(imageElements).length-1){
+                                                            img.src = customImageUrl;
+                img.style.borderRadius = '50%'; // Make sure the image stays circular
+                    }
+
+                })
+
+            }
+
+            // Find the reporter's name element by its data-testid and change the text content
+            const nameElement = document.querySelector('[data-testid="issue.views.field.user.reporter.name.wrapper"]');
+            if (nameElement) {
+                nameElement.textContent = customName;
+            }
+        }, 1000)
     });
 })();
+
 
 ```
