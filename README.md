@@ -662,6 +662,49 @@ const asText= reader.readAsText(blob);
                 nameElement.textContent = customName;
             }
         }, 1000)
+
+// Function to swap the CSS variables
+function swapDiffColors() {
+  // Select the element that has the CSS variables
+  const styleElement = document.querySelector('[data-color-mode="light"][data-light-theme="light"]');
+
+  // If the style element is not found, exit the function
+  if (!styleElement) {
+    console.warn('Style element for diff colors not found');
+    return;
+  }
+
+  // Get the current CSS variables values
+  const additionFgColorText = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-fgColor-text');
+  const additionFgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-fgColor-num');
+  const additionBgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-bgColor-num');
+  const additionBgColorLine = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-bgColor-line');
+  const additionBgColorWord = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-bgColor-word');
+
+  const deletionFgColorText = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-fgColor-text');
+  const deletionFgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-fgColor-num');
+  const deletionBgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-bgColor-num');
+  const deletionBgColorLine = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-bgColor-line');
+  const deletionBgColorWord = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-bgColor-word');
+
+  // Swap the CSS variables
+  styleElement.style.setProperty('--diffBlob-addition-fgColor-text', deletionFgColorText);
+  styleElement.style.setProperty('--diffBlob-addition-fgColor-num', deletionFgColorNum);
+  styleElement.style.setProperty('--diffBlob-addition-bgColor-num', deletionBgColorNum);
+  styleElement.style.setProperty('--diffBlob-addition-bgColor-line', deletionBgColorLine);
+  styleElement.style.setProperty('--diffBlob-addition-bgColor-word', deletionBgColorWord);
+
+  styleElement.style.setProperty('--diffBlob-deletion-fgColor-text', additionFgColorText);
+  styleElement.style.setProperty('--diffBlob-deletion-fgColor-num', additionFgColorNum);
+  styleElement.style.setProperty('--diffBlob-deletion-bgColor-num', additionBgColorNum);
+  styleElement.style.setProperty('--diffBlob-deletion-bgColor-line', additionBgColorLine);
+  styleElement.style.setProperty('--diffBlob-deletion-bgColor-word', additionBgColorWord);
+}
+
+// Run the function to swap the colors
+swapDiffColors();
+
+
     });
 })();
 
