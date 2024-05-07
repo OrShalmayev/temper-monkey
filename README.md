@@ -605,22 +605,22 @@ const asText= reader.readAsText(blob);
         const reviewerElement = document.createElement('p');
         reviewerElement.classList.add('d-flex');
         reviewerElement.innerHTML = `
-            <span class="d-flex min-width-0 flex-1 js-hovercard-left" data-hovercard-type="user" data-hovercard-url="/users/yizhaqb/hovercard" data-assignee-name="yizhaqb">
-                <a class="no-underline" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/yizhaqb">
+            <span class="d-flex min-width-0 flex-1 js-hovercard-left" data-hovercard-type="user">
+                <a class="no-underline" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">
                     <img class="avatar mr-1 avatar-user" src="https://avatars.githubusercontent.com/u/46129649?s=60&v=4" width="20" height="20" alt="@yizhaqb">
                 </a>
-                <a class="assignee Link--primary css-truncate-target width-fit" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/yizhaqb">
+                <a class="assignee Link--primary css-truncate-target width-fit" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">
                     <span class="css-truncate-target width-fit v-align-middle">Or Shalmayev</span>
                 </a>
             </span>
-            <a id="review-status-yizhaqb" class="flex-order-1" aria-labelledby="tooltip-0cada916-ae21-4c0a-b0c4-752c4616ed8a">
+            <a class="flex-order-1" aria-labelledby="tooltip-0cada916-ae21-4c0a-b0c4-752c4616ed8a">
                 <span class="reviewers-status-icon text-center">
                     <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-comment color-fg-muted">
                         <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
                     </svg>
                 </span>
             </a>
-            <button name="re_request_reviewer_id" id="re-request-review-yizhaqb" value="87391864" class="mr-2 btn-link muted-icon" aria-labelledby="tooltip-4e49d190-1405-47ec-8e0f-4603ae326d7f">
+            <button name="re_request_reviewer_id" value="87391864" class="mr-2 btn-link muted-icon" aria-labelledby="tooltip-4e49d190-1405-47ec-8e0f-4603ae326d7f">
                 <span class="reviewers-status-icon">
                     <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-sync">
                         <path d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path>
@@ -664,6 +664,7 @@ const asText= reader.readAsText(blob);
         }, 1000)
     });
 })();
+
 
 
 ```
