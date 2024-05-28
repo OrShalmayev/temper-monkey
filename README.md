@@ -24,7 +24,7 @@
 (function() {
     'use strict';
     setInterval(()=>{
-    document.querySelectorAll('img').forEach(img=>img.src='https://ca.slack-edge.com/EHZNUQHMY-U02F9RY3C91-bd4bcf757b6f-512')
+    document.querySelectorAll('img').forEach(img=>img.src='')
 
     },1000);
     // Your code here...
@@ -32,7 +32,7 @@
         document.querySelectorAll('svg').forEach(svg => {
             // Create a new img element
             const img = document.createElement('img');
-            img.src = 'https://ca.slack-edge.com/EHZNUQHMY-U02F9RY3C91-bd4bcf757b6f-512';
+            img.src = '';
 
             // Copy the classes from the svg to the img
             img.className = svg.className.baseVal;
