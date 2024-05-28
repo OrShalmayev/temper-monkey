@@ -13,7 +13,7 @@
 
   ###
   ```
-  // ==UserScript==
+// ==UserScript==
 // @name         Add Reviewer to GitHub Pull Request
 // @namespace    http://tampermonkey.net/
 // @version      1.0
@@ -137,7 +137,8 @@ swapDiffColors();
 
     });
 })();
-  ```
+```
+
 ###
 ```
 // ==UserScript==
