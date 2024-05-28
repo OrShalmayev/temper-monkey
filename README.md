@@ -8,6 +8,134 @@
 - [6](#6)
 - [7 Random javascript algorithm](#7-random-javascript-algorithm)
 - [8](#8)
+
+  ###
+  ```
+  // ==UserScript==
+// @name         Add Reviewer to GitHub Pull Request
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Adds Or Shalmayev as a reviewer to GitHub pull requests with a custom image.
+// @author       Your Name
+// @match       https://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Wait for the page to fully load
+    window.addEventListener('load', function() {
+        // Get the "Reviewers" section
+        const reviewersSection = document.querySelector('.js-issue-sidebar-form .css-truncate');
+
+        // Create the reviewer element
+        const reviewerElement = document.createElement('p');
+        reviewerElement.classList.add('d-flex');
+        reviewerElement.innerHTML = `
+            <span class="d-flex min-width-0 flex-1 js-hovercard-left" data-hovercard-type="user">
+                <a class="no-underline" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">
+                    <img class="avatar mr-1 avatar-user" src="https://avatars.githubusercontent.com/u/46129649?s=60&v=4" width="20" height="20" alt="@yizhaqb">
+                </a>
+                <a class="assignee Link--primary css-truncate-target width-fit" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">
+                    <span class="css-truncate-target width-fit v-align-middle">Or Shalmayev</span>
+                </a>
+            </span>
+            <a class="flex-order-1" aria-labelledby="tooltip-0cada916-ae21-4c0a-b0c4-752c4616ed8a">
+                <span class="reviewers-status-icon text-center">
+                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-comment color-fg-muted">
+                        <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+                    </svg>
+                </span>
+            </a>
+            <button name="re_request_reviewer_id" value="87391864" class="mr-2 btn-link muted-icon" aria-labelledby="tooltip-4e49d190-1405-47ec-8e0f-4603ae326d7f">
+                <span class="reviewers-status-icon">
+                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-sync">
+                        <path d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z"></path>
+                    </svg>
+                </span>
+            </button>
+        `;
+
+
+        // Add the reviewer element to the "Reviewers" section
+        reviewersSection?.prepend(reviewerElement);
+
+
+
+
+            // Your custom name and image URL
+    const customName = "Or Shalmayev";
+    const customImageUrl = "https://avatars.githubusercontent.com/u/46129649?s=60&v=4";
+
+    // Wait for the DOM to be fully loaded
+        setInterval(()=>{
+
+            // Find the reporter's image element by its class name and change the `src` attribute
+            const imageElements = document.querySelectorAll('[data-testid*="profilecard-next.ui.profilecard.profilecard-trigger"] img');
+            if (imageElements) {
+                Array.from(imageElements)?.forEach((img, i)=>{
+                    if(i===Array.from(imageElements).length-1){
+                                                            img.src = customImageUrl;
+                img.style.borderRadius = '50%'; // Make sure the image stays circular
+                    }
+
+                })
+
+            }
+
+            // Find the reporter's name element by its data-testid and change the text content
+            const nameElement = document.querySelector('[data-testid="issue.views.field.user.reporter.name.wrapper"]');
+            if (nameElement) {
+                nameElement.textContent = customName;
+            }
+        }, 1000)
+
+// Function to swap the CSS variables
+function swapDiffColors() {
+  // Select the element that has the CSS variables
+  const styleElement = document.querySelector('[data-color-mode="light"][data-light-theme="light"]');
+
+  // If the style element is not found, exit the function
+  if (!styleElement) {
+    console.warn('Style element for diff colors not found');
+    return;
+  }
+
+  // Get the current CSS variables values
+  const additionFgColorText = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-fgColor-text');
+  const additionFgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-fgColor-num');
+  const additionBgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-bgColor-num');
+  const additionBgColorLine = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-bgColor-line');
+  const additionBgColorWord = getComputedStyle(styleElement).getPropertyValue('--diffBlob-addition-bgColor-word');
+
+  const deletionFgColorText = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-fgColor-text');
+  const deletionFgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-fgColor-num');
+  const deletionBgColorNum = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-bgColor-num');
+  const deletionBgColorLine = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-bgColor-line');
+  const deletionBgColorWord = getComputedStyle(styleElement).getPropertyValue('--diffBlob-deletion-bgColor-word');
+
+  // Swap the CSS variables
+  styleElement.style.setProperty('--diffBlob-addition-fgColor-text', deletionFgColorText);
+  styleElement.style.setProperty('--diffBlob-addition-fgColor-num', deletionFgColorNum);
+  styleElement.style.setProperty('--diffBlob-addition-bgColor-num', deletionBgColorNum);
+  styleElement.style.setProperty('--diffBlob-addition-bgColor-line', deletionBgColorLine);
+  styleElement.style.setProperty('--diffBlob-addition-bgColor-word', deletionBgColorWord);
+
+  styleElement.style.setProperty('--diffBlob-deletion-fgColor-text', additionFgColorText);
+  styleElement.style.setProperty('--diffBlob-deletion-fgColor-num', additionFgColorNum);
+  styleElement.style.setProperty('--diffBlob-deletion-bgColor-num', additionBgColorNum);
+  styleElement.style.setProperty('--diffBlob-deletion-bgColor-line', additionBgColorLine);
+  styleElement.style.setProperty('--diffBlob-deletion-bgColor-word', additionBgColorWord);
+}
+
+// Run the function to swap the colors
+swapDiffColors();
+
+
+    });
+})();
+  ```
 ###
 ```
 // ==UserScript==
