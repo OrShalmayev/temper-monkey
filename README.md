@@ -8,7 +8,28 @@
 - [6](#6)
 - [7 Random javascript algorithm](#7-random-javascript-algorithm)
 - [8](#8)
+###
+```ts
+```
 
+// ==UserScript==
+// @name         New Userscript
+// @namespace    http://tampermonkey.net/
+// @version      2024-05-28
+// @description  try to take over the world!
+// @author       You
+// @match        *
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    document.querySelectorAll('img').forEach(img=>img.src='https://ca.slack-edge.com/EHZNUQHMY-WPYBRA5E3-2222609f3385-512')
+    // Your code here...
+})();
+```
+```
 ## 1
 ```
 (function () {
@@ -720,3 +741,6 @@ swapDiffColors();
 
 
 ```
+
+
+
