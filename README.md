@@ -9,10 +9,10 @@
 - [7 Random javascript algorithm](#7-random-javascript-algorithm)
 - [8](#8)
 
-  ###
+###
 
-  ###
-  ```
+###
+```
 // ==UserScript==
 // @name         Add Reviewer to GitHub Pull Request
 // @namespace    http://tampermonkey.net/
