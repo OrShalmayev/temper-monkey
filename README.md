@@ -9,7 +9,7 @@
 - [7 Random javascript algorithm](#7-random-javascript-algorithm)
 - [8](#8)
 ###
-```ts
+```
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
@@ -57,7 +57,8 @@
 })();
 ```
 
-```
+
+
 ### 1
 ```
 (function () {
