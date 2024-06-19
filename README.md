@@ -10,8 +10,98 @@
 - [8](#8)
 
 ###
+```
+// ==UserScript==
+// @name         Command+L Listener
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Perform an operation when Command+L is pressed
+// @author       You
+// @match        http://*/*
+// @match        https://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    function deepSearchElement(selector, onElement) {
+        onElement ??= document;
+        const shadowRootElm = Array.from(onElement.querySelectorAll('*')).filter(element => {
+            const desiredElement = element.shadowRoot?.querySelector(selector);
+            return desiredElement != null;
+        })[0];
+        return shadowRootElm.shadowRoot.querySelector(selector);
+    }
+
+    // Function to execute when Command+L is pressed
+    function selectTalzureOrg() {
+        const headerMfe = deepSearchElement('spt-header');
+        const menu = headerMfe.querySelector('spt-header-menu-opener');
+        menu.click();
+
+        let menuItems = headerMfe.parentNode.querySelector('.organization-menu-content');
+
+        // Find the input with the specific data-aid attribute and write text into it
+        let inputElement = menuItems.querySelector('input[data-aid="spt.header.menus.search-bar.search"]');
+        inputElement.value = 'talzur';
+        inputElement.dispatchEvent(new Event('input')); // Trigger the input event to update the view
+
+        setTimeout(() => {
+            let matchingElement = menuItems.querySelector('.organization-menu-item');
+            matchingElement.click();
+        }, 0);
+    }
+
+    function selectAccount(accountToSearch) {
+        // Implementation goes here
+                const headerMfe = deepSearchElement('spt-header');
+        const menu = headerMfe.querySelector('spt-header-account-menu spt-header-menu-opener');
+        menu.click();
+
+        let menuItems = headerMfe.parentNode.querySelector('.account-menu-content ');
+
+        // Find the input with the specific data-aid attribute and write text into it
+        let inputElement = menuItems.querySelector('input[data-aid="spt.header.menus.search-bar.search"]');
+        inputElement.value = accountToSearch;
+        inputElement.dispatchEvent(new Event('input')); // Trigger the input event to update the view
+
+        setTimeout(() => {
+            let matchingElement = menuItems.querySelector('.account-menu-item');
+            matchingElement.click();
+        }, 0);
+    }
+
+    // Listen for keydown event
+    let keys = '';
+window.addEventListener('keydown', function(event) {
+    // Add the pressed key to the keys string
+    keys += event.key.toLowerCase();
+
+
+    if (keys.endsWith('azure')) {
+        setTimeout(() => {
+            selectTalzureOrg();
+            setTimeout(()=>{
+                selectAccount('Containers Azure V2 Account')
+            }, 3000);
+        }, 0);
+        keys = '';
+    } else if (keys.endsWith('aws')) { // New condition for "aws"
+        setTimeout(() => {
+            selectTalzureOrg();
+            setTimeout(()=>{
+                selectAccount('Containers AWS Account')
+            }, 3000);
+        }, 0);
+        keys = '';
+    }
+}, false);
+})();
+```
 
 ###
+
 ```
 // ==UserScript==
 // @name         Add Reviewer to GitHub Pull Request
