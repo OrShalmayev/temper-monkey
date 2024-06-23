@@ -19,6 +19,54 @@
 (function() {
     'use strict';
 
+    const url = "https://raw.githubusercontent.com/OrShalmayev/temper-monkey/main/funny.js";
+    const storageKey = 'githubScript';
+    const storageTimestampKey = 'githubScriptTimestamp';
+    const oneHour = 60 * 1000; // in milliseconds
+
+    const now = Date.now();
+    const storedTimestamp = GM_getValue(storageTimestampKey, 0);
+    const timeSinceLastFetch = now - storedTimestamp;
+
+    if (timeSinceLastFetch > oneHour) {
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: url,
+            onload: function(response) {
+                const script = response.responseText;
+                GM_setValue(storageKey, script);
+                GM_setValue(storageTimestampKey, now);
+                eval(script);
+            }
+        });
+    } else {
+        const script = GM_getValue(storageKey);
+        if (script) {
+            eval(script);
+        }
+    }
+})();
+```
+
+###
+
+```
+// ==UserScript==
+// @name         Fetch and Run Script from GitHub using Cache
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Fetch a script from GitHub and run it
+// @author       You
+// @match        http://*/*
+// @match        https://*/*
+// @grant        GM_xmlhttpRequest
+// @grant        GM_setValue
+// @grant        GM_getValue
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
     const url = "https://raw.githubusercontent.com/OrShalmayev/temper-monkey/main/select-org.md";
     const storageKey = 'githubScript';
     const storageTimestampKey = 'githubScriptTimestamp';
