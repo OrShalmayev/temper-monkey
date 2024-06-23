@@ -1,13 +1,47 @@
 # temper-monkey
 
-- [1](#1)
-- [2](#2)
-- [3](#3)
-- [4](#4)
-- [5](#5)
-- [6](#6)
-- [7 Random javascript algorithm](#7-random-javascript-algorithm)
-- [8](#8)
+###
+
+```
+// ==UserScript==
+// @name         Fetch and Run Script from GitHub
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Fetch a script from GitHub and run it
+// @author       You
+// @match        http://*/*
+// @match        https://*/*
+// @grant        GM_xmlhttpRequest
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: "https://raw.githubusercontent.com/OrShalmayev/temper-monkey/main/select-org.md",
+                        headers: {
+                    "User-Agent": "Mozilla/5.0", // Required by GitHub API
+                    "Accept": "application/vnd.github.v3+json" // Required to get JSON response
+                },
+                onload: function(response) {
+                    if (response.status === 403 && response.statusText.includes('rate limit')) {
+                        // If rate limit error, get a random cached data
+                        const keys = Object.keys(localStorage);
+                        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+                        const randomCachedData = localStorage.getItem(randomKey);
+                        resolve(JSON.parse(randomCachedData));
+                    } else {
+                        const data = response.responseText
+                        eval(data);
+                    }
+                },
+                onerror: function(error) {
+                    reject(error);
+                }
+    });
+})();
+```
 
 ###
 ```
