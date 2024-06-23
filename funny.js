@@ -1,1 +1,1 @@
-alert('wow!')
+console.log('test')
