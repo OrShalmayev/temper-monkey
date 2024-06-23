@@ -4,7 +4,7 @@
 
 ```js
 // ==UserScript==
-// @name         Fetch and Run Script from GitHub using Cache
+// @name         Fetch and Run Funny Script from GitHub using Cache
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  Fetch a script from GitHub and run it
@@ -15,12 +15,18 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // ==/UserScript==
+const runScript = (script) => {
+    const scriptElement = document.createElement('script');
+    scriptElement.textContent = script;
+    scriptElement.defer = true;
+    document.body.appendChild(scriptElement);
+};
 
 (function() {
     'use strict';
 
     const url = "https://raw.githubusercontent.com/OrShalmayev/temper-monkey/main/funny.js";
-    const storageKey = 'githubScript';
+    const storageKey = 'githubFunnyScript';
     const storageTimestampKey = 'githubScriptTimestamp';
     const oneHour = 60 * 1000; // in milliseconds
 
@@ -36,13 +42,13 @@
                 const script = response.responseText;
                 GM_setValue(storageKey, script);
                 GM_setValue(storageTimestampKey, now);
-                eval(script);
+            runScript(script);
             }
         });
     } else {
         const script = GM_getValue(storageKey);
         if (script) {
-            eval(script);
+            runScript(script);
         }
     }
 })();
