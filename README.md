@@ -25,8 +25,8 @@
 (function() {
     'use strict';
     let debounceTimer;
-    const ORG_KEY='Spotinst.OrganizationCookie';
-    const ACC_KEY='Spotinst.SpotinstAccountCookie';
+    const ORG_KEY='***.OrganizationCookie';
+    const ACC_KEY='***.***AccountCookie';
     const getCachedLocalStorageKey=(name)=>`cached${name}`;
 
     async function deepSearchElement(selector, onElement = document) {
@@ -45,7 +45,7 @@ async function selectOrganization(orgName='talzur') {
     if(cachedOrg){
         console.log('Organization found in cache.');
         localStorage.setItem(ORG_KEY,cachedOrg);
-        localStorage.setItem('Spotinst.AccessTokenCookie',cachedAccessToken);
+        localStorage.setItem('***.AccessTokenCookie',cachedAccessToken);
         return true;
     }
 
@@ -60,7 +60,7 @@ async function selectOrganization(orgName='talzur') {
     let matchingElement = menuItems.querySelector('.organization-menu-item');
     await clickElement(matchingElement);
     let appCachedOrg=localStorage.getItem(ORG_KEY);
-    let accessToken = localStorage.getItem('Spotinst.AccessTokenCookie');
+    let accessToken = localStorage.getItem('***.AccessTokenCookie');
     localStorage.setItem(getCachedLocalStorageKey(orgName), appCachedOrg);
     localStorage.setItem(getCachedLocalStorageKey(orgName+'accessToken'), accessToken);
     console.log('Organization fetched and cached.');
