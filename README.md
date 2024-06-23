@@ -2,7 +2,7 @@
 
 ###
 
-```
+```js
 // ==UserScript==
 // @name         Fetch and Run Script from GitHub using Cache
 // @namespace    http://tampermonkey.net/
