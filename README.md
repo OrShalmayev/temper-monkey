@@ -14,12 +14,11 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant GM_addElement
 // ==/UserScript==
+
 const runScript = (script) => {
-    const scriptElement = document.createElement('script');
-    scriptElement.textContent = script;
-    scriptElement.defer = true;
-    document.body.appendChild(scriptElement);
+    GM_addElement('script', {textContent: script});
 };
 
 (function() {
