@@ -108,7 +108,7 @@ function getWithExpiry(key) {
                 const isOrgCached = await selectOrganization();
                 if (!isOrgCached) await new Promise(resolve => setTimeout(resolve, 9000));
                 const isAccCached = await selectAccount('Containers Azure V2 Account');
-                if (!isAccCached) await new Promise(resolve => setTimeout(resolve, 5000));
+                if (!isAccCached) await new Promise(resolve => setTimeout(resolve, 2000));
                 await navigateToClusters();
                 keys = '';
             } else if (keys.endsWith('eks')) {
