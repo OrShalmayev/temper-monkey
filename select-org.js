@@ -115,6 +115,7 @@ function getWithExpiry(key) {
                 const isOrgCached = await selectOrganization();
                 if (!isOrgCached) await new Promise(resolve => setTimeout(resolve, 3000));
                 await selectAccount('Containers AWS Account');
+                await navigateToClusters();
                 keys = '';
             }
         }, 300); // 300ms debounce time
