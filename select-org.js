@@ -96,8 +96,8 @@ function getWithExpiry(key) {
         return false;
     }
 
-    async function navigateToClusters() {
-        window.location.href = `${window.location.origin}/ocean/azure/clusters`;
+    async function navigateToClusters(provider='azure') {
+        window.location.href = `${window.location.origin}/ocean/${provider}/clusters`;
     }
 
     let keys = '';
@@ -115,7 +115,7 @@ function getWithExpiry(key) {
                 const isOrgCached = await selectOrganization();
                 if (!isOrgCached) await new Promise(resolve => setTimeout(resolve, 3000));
                 await selectAccount('Containers AWS Account');
-                await navigateToClusters();
+                await navigateToClusters('aws');
                 keys = '';
             }
         }, 300); // 300ms debounce time
