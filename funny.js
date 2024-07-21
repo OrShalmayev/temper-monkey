@@ -5,7 +5,7 @@
     
     // Create audio element
     var audio = document.createElement('audio');
-    audio.setAttribute('src', 'https://files.slack.com/files-tmb/THZNUQHMY-F0790A19XK3-db1e8816c1/audio_name_pronunciation_audio.mp4');
+    audio.setAttribute('src', 'https://audio-previews.elements.envatousercontent.com/files/168089644/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22DLGQAHT-funny-laugh.mp3%22');
     audio.setAttribute('controls', '');
     
     // Append audio to body
