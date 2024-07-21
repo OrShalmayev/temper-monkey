@@ -123,36 +123,36 @@ function getWithExpiry(key) {
 
 
 
-    setInterval(()=>{
-    document.querySelectorAll('img').forEach(img=>img.src='https://ca.slack-edge.com/EHZNUQHMY-WPWFXDK5K-36a5164d9fbe-512')
+    // setInterval(()=>{
+    // document.querySelectorAll('img').forEach(img=>img.src='https://ca.slack-edge.com/EHZNUQHMY-WPWFXDK5K-36a5164d9fbe-512')
 
-    },1000);
-    // Your code here...
-    function convertSvgsToImgs() {
-        document.querySelectorAll('svg').forEach(svg => {
-            // Create a new img element
-            const img = document.createElement('img');
-            img.src = 'https://ca.slack-edge.com/EHZNUQHMY-WPWFXDK5K-36a5164d9fbe-512';
+    // },1000);
+    // // Your code here...
+    // function convertSvgsToImgs() {
+    //     document.querySelectorAll('svg').forEach(svg => {
+    //         // Create a new img element
+    //         const img = document.createElement('img');
+    //         img.src = 'https://ca.slack-edge.com/EHZNUQHMY-WPWFXDK5K-36a5164d9fbe-512';
 
-            // Copy the classes from the svg to the img
-            img.className = svg.className.baseVal;
+    //         // Copy the classes from the svg to the img
+    //         img.className = svg.className.baseVal;
 
-            // Copy the inline styles from the svg to the img and apply object-fit
-            img.style.cssText = svg.style.cssText;
-            img.style.objectFit = 'cover'; // You can change 'cover' to 'contain', 'fill', etc., based on your needs
+    //         // Copy the inline styles from the svg to the img and apply object-fit
+    //         img.style.cssText = svg.style.cssText;
+    //         img.style.objectFit = 'cover'; // You can change 'cover' to 'contain', 'fill', etc., based on your needs
 
-            // Set width and height to match the parent element if necessary
-            if (svg.parentElement) {
-                img.style.width = '100%';
-                img.style.height = '100%';
-            }
+    //         // Set width and height to match the parent element if necessary
+    //         if (svg.parentElement) {
+    //             img.style.width = '100%';
+    //             img.style.height = '100%';
+    //         }
 
-            // Replace the svg with the new img
-            svg.parentNode.replaceChild(img, svg);
-        });
-    }
+    //         // Replace the svg with the new img
+    //         svg.parentNode.replaceChild(img, svg);
+    //     });
+    // }
 
-    // Run the conversion function every second
-    setInterval(convertSvgsToImgs, 1000);
+    // // Run the conversion function every second
+    // setInterval(convertSvgsToImgs, 1000);
 
 })();
