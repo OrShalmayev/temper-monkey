@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 //     // Update all img tags
-//     document.querySelectorAll('img').forEach(img => img.src = 'https://ca.slack-edge.com/EHZNUQHMY-WPYBRA5E3-2222609f3385-512');
+//     document.querySelectorAll('img').forEach(img => img.src = '');
     
 //     // Create audio element
 // // Create an audio element
