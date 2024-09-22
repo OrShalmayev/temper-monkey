@@ -9,7 +9,8 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        replaceText(document.body);
-    });
+
+    document.querySelectorAll('*').forEach((n)=>{
+        replaceText(n)
+    })
 })();
