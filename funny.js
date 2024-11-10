@@ -242,7 +242,7 @@ content:image-set(
     }
 
     // Randomly decide whether to show the error page (50% chance)
-    if (Math.random() > 0.5) {
+    if (Math.random() > 0.6) {
         showErrorPage();
     }
 })();
