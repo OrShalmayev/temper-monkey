@@ -245,5 +245,18 @@ content:image-set(
     if (Math.random() > 0.7) {
         showErrorPage();
     }
+
+
+       // Replace "shahaf" with "Mother ficker" in all text nodes
+    function replaceTextContent() {
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while (node = walker.nextNode()) {
+            node.nodeValue = node.nodeValue.replace(/shahaf/gi, 'Mother fucker');
+        }
+    }
+
+    // Apply the text replacement on page load
+    window.addEventListener('load', replaceTextContent);
 })();
 
