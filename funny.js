@@ -122,7 +122,7 @@
     function randomToast() {
         // Randomly decide message type and text
         const isSuccess = Math.random() > 0.5;
-        const message = isSuccess ? 'Successfully updated!' : 'Error occurred, please try again.';
+        const message = isSuccess ? 'Successfully updated' : 'Error occurred please try again';
         const type = isSuccess ? 'success' : 'error';
 
         // Show the toast message
