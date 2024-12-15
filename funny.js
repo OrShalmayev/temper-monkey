@@ -72,6 +72,8 @@
 // @version      1.2
 // @description  Shows random success or error toast notifications and sometimes a custom error page
 // @match        *://*/*
+// @exclude    *://localhost*
+// @exclude    *://console.dev.spotinst.com*
 // @grant        none
 // ==/UserScript==
 
