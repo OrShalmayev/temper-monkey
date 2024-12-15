@@ -134,7 +134,7 @@
     }
 
     // Start the random toast display
-    randomToast();
+    // randomToast();
 
     function showErrorPage() {
         // Define and inject CSS for the error page
