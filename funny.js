@@ -282,7 +282,8 @@
     // Your dictionary (case-insensitive)
     const wordMap = {
         'connect': 'Disconnect',
-        'spot': 'Karpenter'
+        'spot': 'Karpenter',
+        'Clusters': 'wow'
     };
 
     // Convert dictionary to RegExp and replacement format
