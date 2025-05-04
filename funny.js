@@ -262,3 +262,95 @@
 //     window.addEventListener('load', replaceTextContent);
 // })();
 
+
+
+
+// #region Or Maman
+// ==UserScript==
+// @name         Word Replacer for Angular (Shadow DOM aware)
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Replace words based on a dictionary, supports Angular + Shadow DOM
+// @author       You
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    // Your dictionary (case-insensitive)
+    const wordMap = {
+        'connect': 'Disconnect',
+        'spot': 'Karpenter'
+    };
+
+    // Convert dictionary to RegExp and replacement format
+    const regexMap = Object.entries(wordMap).map(([key, value]) => ({
+        regex: new RegExp(`\\b${key}\\b`, 'gi'),  // match whole word, case-insensitive
+        replacer: (match) => {
+            // Preserve case (e.g. "Connect" -> "Disconnect")
+            if (match[0] === match[0].toUpperCase()) {
+                return value[0].toUpperCase() + value.slice(1);
+            }
+            return value;
+        }
+    }));
+
+    // Replace text in a text node
+    function replaceText(node) {
+        let text = node.textContent;
+        regexMap.forEach(({ regex, replacer }) => {
+            text = text.replace(regex, replacer);
+        });
+        node.textContent = text;
+    }
+
+    // Traverse DOM and Shadow DOM
+    function traverse(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            replaceText(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.shadowRoot) {
+                traverse(node.shadowRoot);
+            }
+            node.childNodes.forEach(traverse);
+        }
+    }
+
+    // Observe changes (mutation observer)
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                traverse(node);
+            });
+        });
+    });
+
+    // Start observing the entire document and any shadow roots
+    function observeNode(node) {
+        if (!node) return;
+
+        traverse(node);
+        observer.observe(node, {
+            childList: true,
+            subtree: true
+        });
+
+        // Also observe shadow roots
+        if (node.shadowRoot) {
+            observeNode(node.shadowRoot);
+        }
+
+        node.querySelectorAll('*').forEach(el => {
+            if (el.shadowRoot) {
+                observeNode(el.shadowRoot);
+            }
+        });
+    }
+
+    // Initial observe
+    observeNode(document.body);
+})();
+
+// #endregion Or Maman
