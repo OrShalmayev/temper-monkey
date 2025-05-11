@@ -383,7 +383,9 @@ const wordMap = {
     'vCPU': 'vCPU',
     'GiB': 'GiB',
     'Autoscaler': 'ManualScaler', // Component for autoscaling vs manual
-    'EKS': 'EKS'
+    'EKS': 'EKS',
+    'start': 'Stop',
+    'spot': 'karpenter'
     // Version numbers (e.g., v2.0.70) are specific identifiers, not words with antonyms.
 };
 
