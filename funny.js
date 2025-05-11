@@ -285,7 +285,8 @@
         'spot': 'Karpenter',
         'Clusters': 'Cluster5',
         'ri': 'R1',
-        'regular': 'Null'
+        'regular': 'Null',
+        'ocean': 'Sea'
     };
 
     // Convert dictionary to RegExp and replacement format
