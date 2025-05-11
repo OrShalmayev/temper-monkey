@@ -280,14 +280,113 @@
     'use strict';
 
     // Your dictionary (case-insensitive)
-    const wordMap = {
-        'connect': 'Disconnect',
-        'spot': 'Karpenter',
-        'Clusters': 'Cluster5',
-        'ri': 'R1',
-        'regular': 'Null',
-        'ocean': 'Sea'
-    };
+const wordMap = {
+    // Handling user's original example entries with Antonyms:
+    'Disconnect': 'Disconnect',
+    'Karpenter': 'Karpenter', // Product name, no direct antonym
+    'Cluster5': 'Cluster5',   // Identifier, no direct antonym
+    'R1': 'R1',               // Identifier, no direct antonym
+    'Null': 'Value',          // Opposite of lacking value or existence
+    'ocean': 'Desert',        // Literal opposite of 'ocean' (vast water vs. vast arid land)
+
+    // --- Antonyms for words from the user's provided text block ---
+
+    // For "up to date" / "latest" / "Update"
+    'Update': 'Downgrade',        // Or 'Stagnate', 'Freeze' (verb/noun)
+    'latest': 'Oldest',           // For "latest version"
+    'version': 'OutdatedVersion', // Or 'BaseModel' if version implies specificity
+                                  // 'Unversioned' can also work.
+
+    'Overview': 'Details',        // Or 'Specifics'
+    'Recommendations': 'Prohibitions', // Or 'Restrictions'
+    'Cost': 'Benefit',            // Or 'Revenue'
+    'Analysis': 'SurfaceLevelView', // Or 'Assumption', 'Omission' (opposite of in-depth study)
+    'Right Sizing': 'ImproperSizing', // Or 'Misconfiguration'
+    'NEW': 'OLD',                 // Or 'ARCHIVED', 'DEPRECATED'
+
+    // Technical terms often map to themselves or require careful consideration
+    'Namespaces': 'GlobalSpace',  // Or keep 'Namespaces' if no clear operational opposite
+    'Pods': 'Pods',               // Specific K8s concept, no simple antonym
+    'Services': 'Outages',        // Or 'Disruptions' (opposite of service availability)
+    'Nodes': 'Vacancies',         // Or 'AbsenceOfNodes' (opposite of present compute units)
+    'Rolls': 'Rollbacks',         // Assuming "Rolls" means Deployments/Rollouts
+    'AMI Auto Update': 'AMI Manual Freeze', // Phrase
+    'Auto Update': 'ManualHold',  // Or 'StaticConfiguration'
+    'Log': 'UnrecordedData',      // Or 'NoLog', 'EphemeralOutput'
+
+    'managed': 'Unmanaged',       // Or 'Autonomous', 'Neglected'
+    'Savings': 'Losses',          // Or 'Expenditures'
+    'running': 'Stopped',         // Or 'Idle', 'Failed'
+    'calculated': 'Guessed',      // Or 'Assumed', 'Estimated' (if calc. implies precision)
+    'Total': 'Partial',           // Or 'Individual'
+    'est.': 'Actual',             // For "estimated"
+    'cluster': 'IndividualNode',  // Or 'StandaloneUnit'
+    'costs': 'Revenues',          // Or 'Profits'
+
+    'CPU': 'CPU',                 // Label for a resource, no direct word antonym
+    'Memory': 'Memory',           // Label for a resource
+    'Hours': 'Hours',             // Unit
+
+    'Updated': 'Outdated',        // Or 'Stale' (for the state of having been updated)
+    'Last Updated': 'NeverUpdated',// Phrase
+    'Activity': 'Inactivity',     // Or 'Stasis'
+    'Autoscaling': 'ManualScaling', // Or 'FixedSize'
+    'Autoscaling Activity': 'ManualScalingStasis',
+
+    'Learn': 'Ignore',
+    'More': 'Less',
+    'Learn More': 'ViewLess',     // Or 'HideDetails', 'BasicSummary'
+
+    'Scaling Up': 'ScalingDown',
+    'Scale Up': 'ScaleDown',
+    'Events': 'Nonevents',        // Or 'Inaction', 'Normalcy'
+    'Continuous': 'Intermittent', // Or 'Sporadic', 'Halted'
+    'Optimization': 'Degradation',  // Or 'Pessimization'
+    'Scale Down': 'ScaleUp',
+
+    'Revert': 'Persist',          // Or 'Maintain', 'ProceedWith'
+    'Spots': 'OnDemandInstances', // Or 'FixedPrice' (opposite of interruptible/Karpenter pricing)
+    'Commitments': 'NoCommitments', // Or 'FlexibleTerms'
+    'Lower Cost': 'HigherCost',
+    'Lower': 'Higher',
+    'Dynamic': 'Static',          // Or 'Fixed'
+    'Autohealing': 'ManualRepair',  // Or 'FailurePersistence'
+
+    'Breakdown': 'Summary',       // Or 'Aggregation', 'Total'
+    'Lifecycle': 'StaticState',   // Or 'Perpetuity' (opposite of a cycle with stages)
+    'View': 'Hide',
+    'By': 'By',                   // Preposition, difficult to get a direct antonym in this context
+    'Explore': 'Ignore',          // Or 'Overlook'
+    'graph': 'Table',             // Or 'TextReport', 'RawData'
+    'Click': 'IgnoreAction',      // Or 'NoClick' (opposite of performing the action)
+    'zoom': 'Unzoom',             // Or 'ResetView', 'FullView'
+    'maximum': 'Minimum',
+    'time frame': 'PointInTime',  // Or 'Instant'
+    'viewing': 'Hiding',
+
+    'Information': 'Misinformation', // Or 'Obscurity'
+    'Created': 'Destroyed',
+    'Region': 'Global',           // Or 'UndefinedLocation'
+    'Version': 'Unversioned',     // Or 'GenericProduct'
+    'Control': 'Uncontrolled',    // Or 'Laissez-faire'
+    'Plane': 'Plane',             // Difficult to get a good antonym for "Plane" in "Control Plane"
+    'Control Plane': 'UnmanagedSystem', // Or keep as 'Control Plane'
+
+    'Enabled': 'Disabled',
+
+    // Identifiers and highly specific technical nouns map to themselves
+    'talshafir-eks-il-dev': 'talshafir-eks-il-dev',
+    'o-02620eb3': 'o-02620eb3',
+    'Kubernetes': 'Kubernetes',
+    'Controller': 'Controller',     // Specific role, an "Uncontroller" isn't standard
+    'AMI': 'AMI',
+    'vCPU': 'vCPU',
+    'GiB': 'GiB',
+    'Autoscaler': 'ManualScaler', // Component for autoscaling vs manual
+    'EKS': 'EKS'
+    // Version numbers (e.g., v2.0.70) are specific identifiers, not words with antonyms.
+};
+
 
     // Convert dictionary to RegExp and replacement format
     const regexMap = Object.entries(wordMap).map(([key, value]) => ({
