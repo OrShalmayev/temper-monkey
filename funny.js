@@ -283,8 +283,9 @@
     const wordMap = {
         'connect': 'Disconnect',
         'spot': 'Karpenter',
-        'Clusters': 'wow',
-        'ri': 'RB'
+        'Clusters': 'Cluster5',
+        'ri': 'R1',
+        'regular': 'Null'
     };
 
     // Convert dictionary to RegExp and replacement format
