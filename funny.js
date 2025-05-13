@@ -265,197 +265,363 @@
 
 
 
-// #region Or Maman
+// // #region Or Maman
+// // ==UserScript==
+// // @name         Word Replacer for Angular (Shadow DOM aware)
+// // @namespace    http://tampermonkey.net/
+// // @version      1.0
+// // @description  Replace words based on a dictionary, supports Angular + Shadow DOM
+// // @author       You
+// // @match        *://*/*
+// // @grant        none
+// // ==/UserScript==
+
+// (function () {
+//     'use strict';
+
+//     // Your dictionary (case-insensitive)
+// const wordMap = {
+//     // Handling user's original example entries with Antonyms:
+//     'Disconnect': 'Disconnect',
+//     'Karpenter': 'Karpenter', // Product name, no direct antonym
+//     'Cluster5': 'Cluster5',   // Identifier, no direct antonym
+//     'R1': 'R1',               // Identifier, no direct antonym
+//     'Null': 'Value',          // Opposite of lacking value or existence
+//     'ocean': 'Desert',        // Literal opposite of 'ocean' (vast water vs. vast arid land)
+
+//     // --- Antonyms for words from the user's provided text block ---
+
+//     // For "up to date" / "latest" / "Update"
+//     'Update': 'Downgrade',        // Or 'Stagnate', 'Freeze' (verb/noun)
+//     'latest': 'Oldest',           // For "latest version"
+//     'version': 'OutdatedVersion', // Or 'BaseModel' if version implies specificity
+//                                   // 'Unversioned' can also work.
+
+//     'Overview': 'Details',        // Or 'Specifics'
+//     'Recommendations': 'Prohibitions', // Or 'Restrictions'
+//     'Cost': 'Benefit',            // Or 'Revenue'
+//     'Analysis': 'SurfaceLevelView', // Or 'Assumption', 'Omission' (opposite of in-depth study)
+//     'Right Sizing': 'ImproperSizing', // Or 'Misconfiguration'
+//     'NEW': 'OLD',                 // Or 'ARCHIVED', 'DEPRECATED'
+
+//     // Technical terms often map to themselves or require careful consideration
+//     'Namespaces': 'GlobalSpace',  // Or keep 'Namespaces' if no clear operational opposite
+//     'Pods': 'Pods',               // Specific K8s concept, no simple antonym
+//     'Services': 'Outages',        // Or 'Disruptions' (opposite of service availability)
+//     'Nodes': 'Vacancies',         // Or 'AbsenceOfNodes' (opposite of present compute units)
+//     'Rolls': 'Rollbacks',         // Assuming "Rolls" means Deployments/Rollouts
+//     'AMI Auto Update': 'AMI Manual Freeze', // Phrase
+//     'Auto Update': 'ManualHold',  // Or 'StaticConfiguration'
+//     'Log': 'UnrecordedData',      // Or 'NoLog', 'EphemeralOutput'
+
+//     'managed': 'Unmanaged',       // Or 'Autonomous', 'Neglected'
+//     'Savings': 'Losses',          // Or 'Expenditures'
+//     'running': 'Stopped',         // Or 'Idle', 'Failed'
+//     'calculated': 'Guessed',      // Or 'Assumed', 'Estimated' (if calc. implies precision)
+//     'Total': 'Partial',           // Or 'Individual'
+//     'est.': 'Actual',             // For "estimated"
+//     'cluster': 'IndividualNode',  // Or 'StandaloneUnit'
+//     'costs': 'Revenues',          // Or 'Profits'
+
+//     'CPU': 'CPU',                 // Label for a resource, no direct word antonym
+//     'Memory': 'Memory',           // Label for a resource
+//     'Hours': 'Hours',             // Unit
+
+//     'Updated': 'Outdated',        // Or 'Stale' (for the state of having been updated)
+//     'Last Updated': 'NeverUpdated',// Phrase
+//     'Activity': 'Inactivity',     // Or 'Stasis'
+//     'Autoscaling': 'ManualScaling', // Or 'FixedSize'
+//     'Autoscaling Activity': 'ManualScalingStasis',
+
+//     'Learn': 'Ignore',
+//     'More': 'Less',
+//     'Learn More': 'ViewLess',     // Or 'HideDetails', 'BasicSummary'
+
+//     'Scaling Up': 'ScalingDown',
+//     'Scale Up': 'ScaleDown',
+//     'Events': 'Nonevents',        // Or 'Inaction', 'Normalcy'
+//     'Continuous': 'Intermittent', // Or 'Sporadic', 'Halted'
+//     'Optimization': 'Degradation',  // Or 'Pessimization'
+//     'Scale Down': 'ScaleUp',
+
+//     'Revert': 'Persist',          // Or 'Maintain', 'ProceedWith'
+//     'Spots': 'OnDemandInstances', // Or 'FixedPrice' (opposite of interruptible/Karpenter pricing)
+//     'Commitments': 'NoCommitments', // Or 'FlexibleTerms'
+//     'Lower Cost': 'HigherCost',
+//     'Lower': 'Higher',
+//     'Dynamic': 'Static',          // Or 'Fixed'
+//     'Autohealing': 'ManualRepair',  // Or 'FailurePersistence'
+
+//     'Breakdown': 'Summary',       // Or 'Aggregation', 'Total'
+//     'Lifecycle': 'StaticState',   // Or 'Perpetuity' (opposite of a cycle with stages)
+//     'View': 'Hide',
+//     'By': 'By',                   // Preposition, difficult to get a direct antonym in this context
+//     'Explore': 'Ignore',          // Or 'Overlook'
+//     'graph': 'Table',             // Or 'TextReport', 'RawData'
+//     'Click': 'IgnoreAction',      // Or 'NoClick' (opposite of performing the action)
+//     'zoom': 'Unzoom',             // Or 'ResetView', 'FullView'
+//     'maximum': 'Minimum',
+//     'time frame': 'PointInTime',  // Or 'Instant'
+//     'viewing': 'Hiding',
+
+//     'Information': 'Misinformation', // Or 'Obscurity'
+//     'Created': 'Destroyed',
+//     'Region': 'Global',           // Or 'UndefinedLocation'
+//     'Version': 'Unversioned',     // Or 'GenericProduct'
+//     'Control': 'Uncontrolled',    // Or 'Laissez-faire'
+//     'Plane': 'Plane',             // Difficult to get a good antonym for "Plane" in "Control Plane"
+//     'Control Plane': 'UnmanagedSystem', // Or keep as 'Control Plane'
+
+//     'Enabled': 'Disabled',
+
+//     // Identifiers and highly specific technical nouns map to themselves
+//     'talshafir-eks-il-dev': 'talshafir-eks-il-dev',
+//     'o-02620eb3': 'o-02620eb3',
+//     'Kubernetes': 'Kubernetes',
+//     'Controller': 'Controller',     // Specific role, an "Uncontroller" isn't standard
+//     'AMI': 'AMI',
+//     'vCPU': 'vCPU',
+//     'GiB': 'GiB',
+//     'Autoscaler': 'ManualScaler', // Component for autoscaling vs manual
+//     'EKS': 'EKS',
+//     'start': 'Stop',
+//     'spot': 'karpenter'
+//     // Version numbers (e.g., v2.0.70) are specific identifiers, not words with antonyms.
+// };
+
+
+//     // Convert dictionary to RegExp and replacement format
+//     const regexMap = Object.entries(wordMap).map(([key, value]) => ({
+//         regex: new RegExp(`\\b${key}\\b`, 'gi'),  // match whole word, case-insensitive
+//         replacer: (match) => {
+//             // Preserve case (e.g. "Connect" -> "Disconnect")
+//             if (match[0] === match[0].toUpperCase()) {
+//                 return value[0].toUpperCase() + value.slice(1);
+//             }
+//             return value;
+//         }
+//     }));
+
+//     // Replace text in a text node
+//     function replaceText(node) {
+//         let text = node.textContent;
+//         regexMap.forEach(({ regex, replacer }) => {
+//             text = text.replace(regex, replacer);
+//         });
+//         node.textContent = text;
+//     }
+
+//     // Traverse DOM and Shadow DOM
+//     function traverse(node) {
+//         if (node.nodeType === Node.TEXT_NODE) {
+//             replaceText(node);
+//         } else if (node.nodeType === Node.ELEMENT_NODE) {
+//             if (node.shadowRoot) {
+//                 traverse(node.shadowRoot);
+//             }
+//             node.childNodes.forEach(traverse);
+//         }
+//     }
+
+//     // Observe changes (mutation observer)
+//     const observer = new MutationObserver((mutations) => {
+//         mutations.forEach((mutation) => {
+//             mutation.addedNodes.forEach((node) => {
+//                 traverse(node);
+//             });
+//         });
+//     });
+
+//     // Start observing the entire document and any shadow roots
+//     function observeNode(node) {
+//         if (!node) return;
+
+//         traverse(node);
+//         observer.observe(node, {
+//             childList: true,
+//             subtree: true
+//         });
+
+//         // Also observe shadow roots
+//         if (node.shadowRoot) {
+//             observeNode(node.shadowRoot);
+//         }
+
+//         node.querySelectorAll('*').forEach(el => {
+//             if (el.shadowRoot) {
+//                 observeNode(el.shadowRoot);
+//             }
+//         });
+//     }
+
+//     // Initial observe
+//     observeNode(document.body);
+// })();
+
+// // #endregion Or Maman
+
+
+
+// #region itzik
 // ==UserScript==
-// @name         Word Replacer for Angular (Shadow DOM aware)
+// @name         Random Pokémon Ads
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Replace words based on a dictionary, supports Angular + Shadow DOM
-// @author       You
+// @version      0.1
+// @description  Displays a random Pokémon-themed ad on any page.
+// @author       Your Name
 // @match        *://*/*
 // @grant        none
+// @run-at       document-idle
 // ==/UserScript==
 
-(function () {
-    'use strict';
+(function() {
+    'use_strict';
 
-    // Your dictionary (case-insensitive)
-const wordMap = {
-    // Handling user's original example entries with Antonyms:
-    'Disconnect': 'Disconnect',
-    'Karpenter': 'Karpenter', // Product name, no direct antonym
-    'Cluster5': 'Cluster5',   // Identifier, no direct antonym
-    'R1': 'R1',               // Identifier, no direct antonym
-    'Null': 'Value',          // Opposite of lacking value or existence
-    'ocean': 'Desert',        // Literal opposite of 'ocean' (vast water vs. vast arid land)
-
-    // --- Antonyms for words from the user's provided text block ---
-
-    // For "up to date" / "latest" / "Update"
-    'Update': 'Downgrade',        // Or 'Stagnate', 'Freeze' (verb/noun)
-    'latest': 'Oldest',           // For "latest version"
-    'version': 'OutdatedVersion', // Or 'BaseModel' if version implies specificity
-                                  // 'Unversioned' can also work.
-
-    'Overview': 'Details',        // Or 'Specifics'
-    'Recommendations': 'Prohibitions', // Or 'Restrictions'
-    'Cost': 'Benefit',            // Or 'Revenue'
-    'Analysis': 'SurfaceLevelView', // Or 'Assumption', 'Omission' (opposite of in-depth study)
-    'Right Sizing': 'ImproperSizing', // Or 'Misconfiguration'
-    'NEW': 'OLD',                 // Or 'ARCHIVED', 'DEPRECATED'
-
-    // Technical terms often map to themselves or require careful consideration
-    'Namespaces': 'GlobalSpace',  // Or keep 'Namespaces' if no clear operational opposite
-    'Pods': 'Pods',               // Specific K8s concept, no simple antonym
-    'Services': 'Outages',        // Or 'Disruptions' (opposite of service availability)
-    'Nodes': 'Vacancies',         // Or 'AbsenceOfNodes' (opposite of present compute units)
-    'Rolls': 'Rollbacks',         // Assuming "Rolls" means Deployments/Rollouts
-    'AMI Auto Update': 'AMI Manual Freeze', // Phrase
-    'Auto Update': 'ManualHold',  // Or 'StaticConfiguration'
-    'Log': 'UnrecordedData',      // Or 'NoLog', 'EphemeralOutput'
-
-    'managed': 'Unmanaged',       // Or 'Autonomous', 'Neglected'
-    'Savings': 'Losses',          // Or 'Expenditures'
-    'running': 'Stopped',         // Or 'Idle', 'Failed'
-    'calculated': 'Guessed',      // Or 'Assumed', 'Estimated' (if calc. implies precision)
-    'Total': 'Partial',           // Or 'Individual'
-    'est.': 'Actual',             // For "estimated"
-    'cluster': 'IndividualNode',  // Or 'StandaloneUnit'
-    'costs': 'Revenues',          // Or 'Profits'
-
-    'CPU': 'CPU',                 // Label for a resource, no direct word antonym
-    'Memory': 'Memory',           // Label for a resource
-    'Hours': 'Hours',             // Unit
-
-    'Updated': 'Outdated',        // Or 'Stale' (for the state of having been updated)
-    'Last Updated': 'NeverUpdated',// Phrase
-    'Activity': 'Inactivity',     // Or 'Stasis'
-    'Autoscaling': 'ManualScaling', // Or 'FixedSize'
-    'Autoscaling Activity': 'ManualScalingStasis',
-
-    'Learn': 'Ignore',
-    'More': 'Less',
-    'Learn More': 'ViewLess',     // Or 'HideDetails', 'BasicSummary'
-
-    'Scaling Up': 'ScalingDown',
-    'Scale Up': 'ScaleDown',
-    'Events': 'Nonevents',        // Or 'Inaction', 'Normalcy'
-    'Continuous': 'Intermittent', // Or 'Sporadic', 'Halted'
-    'Optimization': 'Degradation',  // Or 'Pessimization'
-    'Scale Down': 'ScaleUp',
-
-    'Revert': 'Persist',          // Or 'Maintain', 'ProceedWith'
-    'Spots': 'OnDemandInstances', // Or 'FixedPrice' (opposite of interruptible/Karpenter pricing)
-    'Commitments': 'NoCommitments', // Or 'FlexibleTerms'
-    'Lower Cost': 'HigherCost',
-    'Lower': 'Higher',
-    'Dynamic': 'Static',          // Or 'Fixed'
-    'Autohealing': 'ManualRepair',  // Or 'FailurePersistence'
-
-    'Breakdown': 'Summary',       // Or 'Aggregation', 'Total'
-    'Lifecycle': 'StaticState',   // Or 'Perpetuity' (opposite of a cycle with stages)
-    'View': 'Hide',
-    'By': 'By',                   // Preposition, difficult to get a direct antonym in this context
-    'Explore': 'Ignore',          // Or 'Overlook'
-    'graph': 'Table',             // Or 'TextReport', 'RawData'
-    'Click': 'IgnoreAction',      // Or 'NoClick' (opposite of performing the action)
-    'zoom': 'Unzoom',             // Or 'ResetView', 'FullView'
-    'maximum': 'Minimum',
-    'time frame': 'PointInTime',  // Or 'Instant'
-    'viewing': 'Hiding',
-
-    'Information': 'Misinformation', // Or 'Obscurity'
-    'Created': 'Destroyed',
-    'Region': 'Global',           // Or 'UndefinedLocation'
-    'Version': 'Unversioned',     // Or 'GenericProduct'
-    'Control': 'Uncontrolled',    // Or 'Laissez-faire'
-    'Plane': 'Plane',             // Difficult to get a good antonym for "Plane" in "Control Plane"
-    'Control Plane': 'UnmanagedSystem', // Or keep as 'Control Plane'
-
-    'Enabled': 'Disabled',
-
-    // Identifiers and highly specific technical nouns map to themselves
-    'talshafir-eks-il-dev': 'talshafir-eks-il-dev',
-    'o-02620eb3': 'o-02620eb3',
-    'Kubernetes': 'Kubernetes',
-    'Controller': 'Controller',     // Specific role, an "Uncontroller" isn't standard
-    'AMI': 'AMI',
-    'vCPU': 'vCPU',
-    'GiB': 'GiB',
-    'Autoscaler': 'ManualScaler', // Component for autoscaling vs manual
-    'EKS': 'EKS',
-    'start': 'Stop',
-    'spot': 'karpenter'
-    // Version numbers (e.g., v2.0.70) are specific identifiers, not words with antonyms.
-};
-
-
-    // Convert dictionary to RegExp and replacement format
-    const regexMap = Object.entries(wordMap).map(([key, value]) => ({
-        regex: new RegExp(`\\b${key}\\b`, 'gi'),  // match whole word, case-insensitive
-        replacer: (match) => {
-            // Preserve case (e.g. "Connect" -> "Disconnect")
-            if (match[0] === match[0].toUpperCase()) {
-                return value[0].toUpperCase() + value.slice(1);
-            }
-            return value;
+    // --- Configuration ---
+    const POKEMON_ADS = [
+        {
+            text: "Catch 'em all with the new PokéNet! Unbeatable connectivity for all your trainer needs.",
+            link: "#pokeball"
+        },
+        {
+            text: "Pikachu's Power-Up Juice - Get an electrifying boost to your day!",
+            link: "#pikachu"
+        },
+        {
+            text: "Professor Oak's Pokémon Academy - Enroll Now and become a Pokémon Master!",
+            link: "#professoroak"
+        },
+        {
+            text: "Snorlax Sleep Aids - Guaranteed to help you sleep like a log. Wake up refreshed!",
+            link: "#snorlax"
+        },
+        {
+            text: "Charizard's Fiery Hot Sauce - Add some spice to your life! Handle with care.",
+            link: "#charizard"
+        },
+        {
+            text: "Jigglypuff's Lullaby Lounge - Relax and unwind with soothing melodies. Open 24/7.",
+            link: "#jigglypuff"
+        },
+        {
+            text: "Magikarp's Splashy Deals - Unbelievable offers that are surprisingly good!",
+            link: "#magikarp"
+        },
+        {
+            text: "Visit the Pokémon Center! Your Pokémon will thank you. Free check-ups this week!",
+            link: "#pokemoncenter"
+        },
+        {
+            text: "Team Rocket's Recruitment Drive! Looking for ambitious individuals. Great benefits!",
+            link: "#teamrocket"
+        },
+        {
+            text: "Master Ball Sale! Limited stock. Don't miss your chance to catch ANY Pokémon!",
+            link: "#masterball"
         }
-    }));
+    ];
 
-    // Replace text in a text node
-    function replaceText(node) {
-        let text = node.textContent;
-        regexMap.forEach(({ regex, replacer }) => {
-            text = text.replace(regex, replacer);
-        });
-        node.textContent = text;
+    const AD_ID = 'pokemon-random-ad-container';
+    const AD_APPEAR_DELAY_MS = 2000; // Delay before the ad appears
+
+    // --- Helper Functions ---
+
+    /**
+     * Selects a random item from an array.
+     * @param {Array} arr - The array to select from.
+     * @returns {*} A random item from the array.
+     */
+    function getRandomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    // Traverse DOM and Shadow DOM
-    function traverse(node) {
-        if (node.nodeType === Node.TEXT_NODE) {
-            replaceText(node);
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            if (node.shadowRoot) {
-                traverse(node.shadowRoot);
-            }
-            node.childNodes.forEach(traverse);
-        }
-    }
-
-    // Observe changes (mutation observer)
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                traverse(node);
-            });
-        });
-    });
-
-    // Start observing the entire document and any shadow roots
-    function observeNode(node) {
-        if (!node) return;
-
-        traverse(node);
-        observer.observe(node, {
-            childList: true,
-            subtree: true
-        });
-
-        // Also observe shadow roots
-        if (node.shadowRoot) {
-            observeNode(node.shadowRoot);
+    /**
+     * Creates and displays the Pokémon ad.
+     */
+    function displayPokemonAd() {
+        // Don't show ad if one already exists (e.g., on single page apps after navigation)
+        if (document.getElementById(AD_ID)) {
+            return;
         }
 
-        node.querySelectorAll('*').forEach(el => {
-            if (el.shadowRoot) {
-                observeNode(el.shadowRoot);
-            }
-        });
+        const selectedAd = getRandomItem(POKEMON_ADS);
+
+        // Create ad container
+        const adContainer = document.createElement('div');
+        adContainer.id = AD_ID;
+        // Basic styling - feel free to make this fancier!
+        adContainer.style.position = 'fixed';
+        adContainer.style.bottom = '20px';
+        adContainer.style.right = '20px';
+        adContainer.style.padding = '15px';
+        adContainer.style.backgroundColor = '#FFFFE0'; // Light yellow, like a post-it
+        adContainer.style.border = '2px solid #FFD700'; // Gold border
+        adContainer.style.borderRadius = '10px';
+        adContainer.style.boxShadow = '5px 5px 15px rgba(0,0,0,0.2)';
+        adContainer.style.zIndex = '9999'; // Ensure it's on top
+        adContainer.style.fontFamily = 'Arial, sans-serif';
+        adContainer.style.fontSize = '14px';
+        adContainer.style.color = '#333';
+        adContainer.style.maxWidth = '250px';
+        adContainer.style.transition = 'opacity 0.5s ease-in-out';
+        adContainer.style.opacity = '0'; // Start hidden for fade-in
+
+        // Ad content
+        const adText = document.createElement('p');
+        adText.textContent = selectedAd.text;
+        adText.style.margin = '0 0 10px 0';
+        adText.style.lineHeight = '1.4';
+
+        // Ad link (optional)
+        const adLink = document.createElement('a');
+        adLink.href = selectedAd.link; // This is a dummy link, change if needed
+        adLink.textContent = 'Learn More...';
+        adLink.style.color = '#007bff';
+        adLink.style.textDecoration = 'none';
+        adLink.target = '_blank'; // Open in new tab
+
+        // Close button
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'X';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '5px';
+        closeButton.style.right = '5px';
+        closeButton.style.background = 'transparent';
+        closeButton.style.border = 'none';
+        closeButton.style.color = '#aaa';
+        closeButton.style.fontSize = '16px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.padding = '5px';
+        closeButton.style.lineHeight = '1';
+
+        closeButton.onclick = function() {
+            adContainer.style.opacity = '0';
+            setTimeout(() => {
+                if (adContainer.parentNode) {
+                    adContainer.parentNode.removeChild(adContainer);
+                }
+            }, 500); // Remove after fade out
+        };
+
+        // Assemble the ad
+        adContainer.appendChild(closeButton);
+        adContainer.appendChild(adText);
+        adContainer.appendChild(adLink);
+
+        // Add to page
+        document.body.appendChild(adContainer);
+
+        // Fade in the ad
+        setTimeout(() => {
+            adContainer.style.opacity = '1';
+        }, 100); // Short delay before starting fade-in
     }
 
-    // Initial observe
-    observeNode(document.body);
+    // --- Main Execution ---
+
+    // Wait a bit for the page to settle before showing the ad
+    setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
+
 })();
 
-// #endregion Or Maman
+// #endregion itzik
