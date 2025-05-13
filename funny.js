@@ -463,11 +463,12 @@
 
 
 // #region itzik
+
 // ==UserScript==
-// @name         Random Pokémon Ads
+// @name         Enhanced Random Pokémon Ads (with Real Images)
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Displays a random Pokémon-themed ad on any page.
+// @version      0.3
+// @description  Displays a more beautiful and interactive random Pokémon-themed ad on any page, now with actual Pokémon images.
 // @author       Your Name
 // @match        *://*/*
 // @grant        none
@@ -480,49 +481,76 @@
     // --- Configuration ---
     const POKEMON_ADS = [
         {
-            text: "Catch 'em all with the new PokéNet! Unbeatable connectivity for all your trainer needs.",
-            link: "#pokeball"
+            name: "PokéNet Max",
+            text: "Blazing fast connections for every Trainer! Stream battles, trade globally, and never miss a rare spawn.",
+            link: "#pokenet",
+            // Using Porygon for a network-themed ad
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/137.png", // Porygon
+            themeColor: "#F95587", // Porygon's pink
+            buttonText: "Get Connected!"
         },
         {
-            text: "Pikachu's Power-Up Juice - Get an electrifying boost to your day!",
-            link: "#pikachu"
+            name: "Pikachu Power Shakes",
+            text: "Electrify your mornings! Packed with vitamins and a shocking amount of flavor.",
+            link: "#pikashake",
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", // Pikachu
+            themeColor: "#FFDE00", // Pikachu Yellow
+            buttonText: "Try One Today!"
         },
         {
-            text: "Professor Oak's Pokémon Academy - Enroll Now and become a Pokémon Master!",
-            link: "#professoroak"
+            name: "Oak's Advanced Academy",
+            text: "Unlock your potential! Master advanced battle strategies and Pokémon research.",
+            link: "#oakacademy",
+            // Using Alakazam, known for high intelligence
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png", // Alakazam
+            themeColor: "#F8D030", // Alakazam's Yellow/Brown
+            buttonText: "Enroll Now!"
         },
         {
-            text: "Snorlax Sleep Aids - Guaranteed to help you sleep like a log. Wake up refreshed!",
-            link: "#snorlax"
+            name: "Snorlax Serene Slumber Mattress",
+            text: "The ultimate sleep experience. Wake up feeling as refreshed as a Snorlax after a good nap!",
+            link: "#snorlaxsleep",
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png", // Snorlax
+            themeColor: "#A8A878", // Snorlax's Normal type color, or a sleepy blue: #81D4FA
+            buttonText: "Sleep Better!"
         },
         {
-            text: "Charizard's Fiery Hot Sauce - Add some spice to your life! Handle with care.",
-            link: "#charizard"
+            name: "Charizard's Ember Grill",
+            text: "Taste the fire! Perfectly grilled delights that pack a punch of flavor.",
+            link: "#charizardgrill",
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", // Charizard
+            themeColor: "#FF7043", // Fiery Orange
+            buttonText: "Order Now!"
         },
         {
-            text: "Jigglypuff's Lullaby Lounge - Relax and unwind with soothing melodies. Open 24/7.",
-            link: "#jigglypuff"
+            name: "Jigglypuff's Karaoke Club",
+            text: "Sing your heart out! Or, let Jigglypuff do it for you... maybe bring earplugs.",
+            link: "#jigglykaraoke",
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png", // Jigglypuff
+            themeColor: "#F48FB1", // Pink
+            buttonText: "Join the Fun!"
         },
         {
-            text: "Magikarp's Splashy Deals - Unbelievable offers that are surprisingly good!",
-            link: "#magikarp"
+            name: "Magikarp's Splash Zone",
+            text: "Surprisingly fun! Get ready for a splashing good time. It's more exciting than it sounds!",
+            link: "#magikarpsplash",
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png", // Magikarp
+            themeColor: "#FFB74D", // Orange
+            buttonText: "Dive In!"
         },
         {
-            text: "Visit the Pokémon Center! Your Pokémon will thank you. Free check-ups this week!",
-            link: "#pokemoncenter"
-        },
-        {
-            text: "Team Rocket's Recruitment Drive! Looking for ambitious individuals. Great benefits!",
-            link: "#teamrocket"
-        },
-        {
-            text: "Master Ball Sale! Limited stock. Don't miss your chance to catch ANY Pokémon!",
-            link: "#masterball"
+            name: "Elite Four Fitness",
+            text: "Train like a champion! Get fit, strong, and ready to take on any challenge.",
+            link: "#elitefitness",
+            // Using Machamp, known for its strength
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png", // Machamp
+            themeColor: "#C03028", // Fighting type red/brown
+            buttonText: "Start Training!"
         }
     ];
 
-    const AD_ID = 'pokemon-random-ad-container';
-    const AD_APPEAR_DELAY_MS = 2000; // Delay before the ad appears
+    const AD_ID = 'pokemon-enhanced-ad-container';
+    const AD_APPEAR_DELAY_MS = 2500; // Delay before the ad appears
 
     // --- Helper Functions ---
 
@@ -539,89 +567,227 @@
      * Creates and displays the Pokémon ad.
      */
     function displayPokemonAd() {
-        // Don't show ad if one already exists (e.g., on single page apps after navigation)
         if (document.getElementById(AD_ID)) {
-            return;
+            return; // Don't show ad if one already exists
         }
 
         const selectedAd = getRandomItem(POKEMON_ADS);
 
-        // Create ad container
+        // --- Create Ad Container ---
         const adContainer = document.createElement('div');
         adContainer.id = AD_ID;
-        // Basic styling - feel free to make this fancier!
-        adContainer.style.position = 'fixed';
-        adContainer.style.bottom = '20px';
-        adContainer.style.right = '20px';
-        adContainer.style.padding = '15px';
-        adContainer.style.backgroundColor = '#FFFFE0'; // Light yellow, like a post-it
-        adContainer.style.border = '2px solid #FFD700'; // Gold border
-        adContainer.style.borderRadius = '10px';
-        adContainer.style.boxShadow = '5px 5px 15px rgba(0,0,0,0.2)';
-        adContainer.style.zIndex = '9999'; // Ensure it's on top
-        adContainer.style.fontFamily = 'Arial, sans-serif';
-        adContainer.style.fontSize = '14px';
-        adContainer.style.color = '#333';
-        adContainer.style.maxWidth = '250px';
-        adContainer.style.transition = 'opacity 0.5s ease-in-out';
-        adContainer.style.opacity = '0'; // Start hidden for fade-in
+        Object.assign(adContainer.style, {
+            position: 'fixed',
+            bottom: '25px',
+            right: '-400px', // Start off-screen for slide-in
+            width: '360px',
+            backgroundColor: '#FFFFFF',
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05)',
+            zIndex: '10000',
+            fontFamily: "'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+            color: '#333',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden', // Important for border-radius on children
+            transition: 'right 0.7s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease-out', // Combined transition
+            opacity: '0' // Start transparent for fade-in
+        });
 
-        // Ad content
-        const adText = document.createElement('p');
-        adText.textContent = selectedAd.text;
-        adText.style.margin = '0 0 10px 0';
-        adText.style.lineHeight = '1.4';
+        // --- Ad Header (for a colored bar) ---
+        const adHeader = document.createElement('div');
+        Object.assign(adHeader.style, {
+            backgroundColor: selectedAd.themeColor || '#FFCB05', // Use ad-specific theme or default yellow
+            padding: '8px 15px', // Reduced padding slightly for a sleeker header
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px',
+            minHeight: '30px', // Ensure header has some height even if empty for close button placement
+            position: 'relative' // For absolute positioning of the close button within it
+        });
 
-        // Ad link (optional)
-        const adLink = document.createElement('a');
-        adLink.href = selectedAd.link; // This is a dummy link, change if needed
-        adLink.textContent = 'Learn More...';
-        adLink.style.color = '#007bff';
-        adLink.style.textDecoration = 'none';
-        adLink.target = '_blank'; // Open in new tab
-
-        // Close button
+        // --- Close Button ---
         const closeButton = document.createElement('button');
-        closeButton.textContent = 'X';
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '5px';
-        closeButton.style.right = '5px';
-        closeButton.style.background = 'transparent';
-        closeButton.style.border = 'none';
-        closeButton.style.color = '#aaa';
-        closeButton.style.fontSize = '16px';
-        closeButton.style.cursor = 'pointer';
-        closeButton.style.padding = '5px';
-        closeButton.style.lineHeight = '1';
-
+        closeButton.innerHTML = '&times;'; // HTML entity for 'X'
+        Object.assign(closeButton.style, {
+            position: 'absolute',
+            top: '50%', // Center vertically
+            right: '10px',
+            transform: 'translateY(-50%)', // Adjust for vertical centering
+            background: 'rgba(0,0,0,0.15)', // Slightly more visible background
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '50%',
+            width: '28px',
+            height: '28px',
+            fontSize: '20px',
+            lineHeight: '28px', // Ensure 'X' is centered in the button
+            textAlign: 'center',
+            cursor: 'pointer',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.2)', // Softer shadow
+            transition: 'background-color 0.2s ease, transform 0.2s ease'
+        });
+        closeButton.onmouseover = () => {
+            closeButton.style.backgroundColor = 'rgba(0,0,0,0.3)';
+            closeButton.style.transform = 'translateY(-50%) scale(1.1)';
+        };
+        closeButton.onmouseout = () => {
+            closeButton.style.backgroundColor = 'rgba(0,0,0,0.15)';
+            closeButton.style.transform = 'translateY(-50%) scale(1)';
+        };
         closeButton.onclick = function() {
             adContainer.style.opacity = '0';
+            adContainer.style.right = '-400px'; // Slide out
             setTimeout(() => {
                 if (adContainer.parentNode) {
                     adContainer.parentNode.removeChild(adContainer);
                 }
-            }, 500); // Remove after fade out
+            }, 700); // Remove after animation
+        };
+        adHeader.appendChild(closeButton);
+
+        // --- Ad Content Area (Image + Text) ---
+        const contentArea = document.createElement('div');
+        Object.assign(contentArea.style, {
+            display: 'flex',
+            padding: '15px', // Slightly reduced padding
+            alignItems: 'center', // Vertically center image with text block
+            gap: '15px' // Space between image and text block
+        });
+
+        // --- Pokémon Image ---
+        const adImage = document.createElement('img');
+        adImage.src = selectedAd.imageUrl;
+        adImage.alt = selectedAd.name || "Pokémon Ad Image"; // Alt text for accessibility
+        Object.assign(adImage.style, {
+            width: '80px',
+            height: '80px',
+            borderRadius: '8px',
+            objectFit: 'contain', // Use 'contain' to ensure the whole Pokémon is visible, 'cover' might crop
+            flexShrink: '0',
+            backgroundColor: '#f0f0f0' // A light background for the image area if transparent PNG
+        });
+        // Handle image loading errors
+        adImage.onerror = function() {
+            this.src = 'https://placehold.co/80x80/CCCCCC/FFFFFF?text=Error'; // Fallback placeholder
+            this.alt = 'Image failed to load';
         };
 
-        // Assemble the ad
-        adContainer.appendChild(closeButton);
-        adContainer.appendChild(adText);
-        adContainer.appendChild(adLink);
 
-        // Add to page
+        // --- Text Block (Title, Description, Button) ---
+        const textBlock = document.createElement('div');
+        Object.assign(textBlock.style, {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px', // Reduced gap
+            flexGrow: '1'
+        });
+
+        // --- Ad Title ---
+        const adTitle = document.createElement('h3');
+        adTitle.textContent = selectedAd.name;
+        Object.assign(adTitle.style, {
+            margin: '0',
+            fontSize: '17px', // Slightly smaller
+            fontWeight: '700', // Bolder
+            color: selectedAd.themeColor || '#2c3e50' // Darker default title color
+        });
+
+        // --- Ad Description ---
+        const adTextElement = document.createElement('p');
+        adTextElement.textContent = selectedAd.text;
+        Object.assign(adTextElement.style, {
+            margin: '0',
+            fontSize: '13px', // Slightly smaller
+            lineHeight: '1.45',
+            color: '#4A4A4A' // Slightly darker text
+        });
+
+        // --- "Learn More" Button ---
+        const learnMoreButton = document.createElement('a');
+        learnMoreButton.href = selectedAd.link;
+        learnMoreButton.textContent = selectedAd.buttonText || 'Learn More';
+        learnMoreButton.target = '_blank'; // Open in new tab
+        Object.assign(learnMoreButton.style, {
+            display: 'inline-block',
+            padding: '8px 12px', // Slightly smaller button
+            backgroundColor: selectedAd.themeColor || '#FFCB05',
+            color: (selectedAd.themeColor && isColorDark(selectedAd.themeColor)) ? '#FFFFFF' : '#212121',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            textAlign: 'center',
+            fontWeight: '600', // Bolder button text
+            fontSize: '13px', // Slightly smaller
+            marginTop: '8px',
+            transition: 'filter 0.2s ease, transform 0.2s ease', // Changed to filter for brightness
+            alignSelf: 'flex-start'
+        });
+        learnMoreButton.onmouseover = () => {
+            learnMoreButton.style.filter = 'brightness(90%)';
+            learnMoreButton.style.transform = 'translateY(-1px)'; // Smaller lift
+        };
+        learnMoreButton.onmouseout = () => {
+            learnMoreButton.style.filter = 'brightness(100%)';
+            learnMoreButton.style.transform = 'translateY(0)';
+        };
+
+
+        // --- Assemble the Ad ---
+        textBlock.appendChild(adTitle);
+        textBlock.appendChild(adTextElement);
+        textBlock.appendChild(learnMoreButton);
+
+        contentArea.appendChild(adImage);
+        contentArea.appendChild(textBlock);
+
+        adContainer.appendChild(adHeader);
+        adContainer.appendChild(contentArea);
+
+
+        // --- Add to Page ---
         document.body.appendChild(adContainer);
 
-        // Fade in the ad
+        // --- Trigger Animation ---
         setTimeout(() => {
             adContainer.style.opacity = '1';
-        }, 100); // Short delay before starting fade-in
+            adContainer.style.right = '25px';
+        }, 100);
     }
 
-    // --- Main Execution ---
+    /**
+     * Helper function to determine if a color is dark (for text contrast).
+     * @param {string} colorHex - Hex color string (e.g., "#FF0000").
+     * @returns {boolean} True if the color is considered dark.
+     */
+    function isColorDark(colorHex) {
+        if (!colorHex) return false;
+        const hex = colorHex.replace("#", "");
+        let r, g, b;
+        if (hex.length === 3) {
+            r = parseInt(hex.substring(0, 1) + hex.substring(0, 1), 16);
+            g = parseInt(hex.substring(1, 2) + hex.substring(1, 2), 16);
+            b = parseInt(hex.substring(2, 3) + hex.substring(2, 3), 16);
+        } else if (hex.length === 6) {
+            r = parseInt(hex.substring(0, 2), 16);
+            g = parseInt(hex.substring(2, 4), 16);
+            b = parseInt(hex.substring(4, 6), 16);
+        } else {
+            return false; // Invalid hex length
+        }
+        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+        return luma < 128;
+    }
 
-    // Wait a bit for the page to settle before showing the ad
-    setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
+
+    // --- Main Execution ---
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
+    } else {
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
+        });
+    }
 
 })();
+
 
 // #endregion itzik
