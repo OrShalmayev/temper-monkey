@@ -266,197 +266,197 @@
 
 
 // // #region Or Maman
-// // ==UserScript==
-// // @name         Word Replacer for Angular (Shadow DOM aware)
-// // @namespace    http://tampermonkey.net/
-// // @version      1.0
-// // @description  Replace words based on a dictionary, supports Angular + Shadow DOM
-// // @author       You
-// // @match        *://*/*
-// // @grant        none
-// // ==/UserScript==
+// ==UserScript==
+// @name         Word Replacer for Angular (Shadow DOM aware)
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Replace words based on a dictionary, supports Angular + Shadow DOM
+// @author       You
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
 
-// (function () {
-//     'use strict';
+(function () {
+    'use strict';
 
-//     // Your dictionary (case-insensitive)
-// const wordMap = {
-//     // Handling user's original example entries with Antonyms:
-//     'Disconnect': 'Disconnect',
-//     'Karpenter': 'Karpenter', // Product name, no direct antonym
-//     'Cluster5': 'Cluster5',   // Identifier, no direct antonym
-//     'R1': 'R1',               // Identifier, no direct antonym
-//     'Null': 'Value',          // Opposite of lacking value or existence
-//     'ocean': 'Desert',        // Literal opposite of 'ocean' (vast water vs. vast arid land)
+    // Your dictionary (case-insensitive)
+const wordMap = {
+    // Handling user's original example entries with Antonyms:
+    'Disconnect': 'Disconnect',
+    'Karpenter': 'Karpenter', // Product name, no direct antonym
+    'Cluster5': 'Cluster5',   // Identifier, no direct antonym
+    'R1': 'R1',               // Identifier, no direct antonym
+    'Null': 'Value',          // Opposite of lacking value or existence
+    'ocean': 'Desert',        // Literal opposite of 'ocean' (vast water vs. vast arid land)
 
-//     // --- Antonyms for words from the user's provided text block ---
+    // --- Antonyms for words from the user's provided text block ---
 
-//     // For "up to date" / "latest" / "Update"
-//     'Update': 'Downgrade',        // Or 'Stagnate', 'Freeze' (verb/noun)
-//     'latest': 'Oldest',           // For "latest version"
-//     'version': 'OutdatedVersion', // Or 'BaseModel' if version implies specificity
-//                                   // 'Unversioned' can also work.
+    // For "up to date" / "latest" / "Update"
+    'Update': 'Downgrade',        // Or 'Stagnate', 'Freeze' (verb/noun)
+    'latest': 'Oldest',           // For "latest version"
+    'version': 'OutdatedVersion', // Or 'BaseModel' if version implies specificity
+                                  // 'Unversioned' can also work.
 
-//     'Overview': 'Details',        // Or 'Specifics'
-//     'Recommendations': 'Prohibitions', // Or 'Restrictions'
-//     'Cost': 'Benefit',            // Or 'Revenue'
-//     'Analysis': 'SurfaceLevelView', // Or 'Assumption', 'Omission' (opposite of in-depth study)
-//     'Right Sizing': 'ImproperSizing', // Or 'Misconfiguration'
-//     'NEW': 'OLD',                 // Or 'ARCHIVED', 'DEPRECATED'
+    'Overview': 'Details',        // Or 'Specifics'
+    'Recommendations': 'Prohibitions', // Or 'Restrictions'
+    'Cost': 'Benefit',            // Or 'Revenue'
+    'Analysis': 'SurfaceLevelView', // Or 'Assumption', 'Omission' (opposite of in-depth study)
+    'Right Sizing': 'ImproperSizing', // Or 'Misconfiguration'
+    'NEW': 'OLD',                 // Or 'ARCHIVED', 'DEPRECATED'
 
-//     // Technical terms often map to themselves or require careful consideration
-//     'Namespaces': 'GlobalSpace',  // Or keep 'Namespaces' if no clear operational opposite
-//     'Pods': 'Pods',               // Specific K8s concept, no simple antonym
-//     'Services': 'Outages',        // Or 'Disruptions' (opposite of service availability)
-//     'Nodes': 'Vacancies',         // Or 'AbsenceOfNodes' (opposite of present compute units)
-//     'Rolls': 'Rollbacks',         // Assuming "Rolls" means Deployments/Rollouts
-//     'AMI Auto Update': 'AMI Manual Freeze', // Phrase
-//     'Auto Update': 'ManualHold',  // Or 'StaticConfiguration'
-//     'Log': 'UnrecordedData',      // Or 'NoLog', 'EphemeralOutput'
+    // Technical terms often map to themselves or require careful consideration
+    'Namespaces': 'GlobalSpace',  // Or keep 'Namespaces' if no clear operational opposite
+    'Pods': 'Pods',               // Specific K8s concept, no simple antonym
+    'Services': 'Outages',        // Or 'Disruptions' (opposite of service availability)
+    'Nodes': 'Vacancies',         // Or 'AbsenceOfNodes' (opposite of present compute units)
+    'Rolls': 'Rollbacks',         // Assuming "Rolls" means Deployments/Rollouts
+    'AMI Auto Update': 'AMI Manual Freeze', // Phrase
+    'Auto Update': 'ManualHold',  // Or 'StaticConfiguration'
+    'Log': 'UnrecordedData',      // Or 'NoLog', 'EphemeralOutput'
 
-//     'managed': 'Unmanaged',       // Or 'Autonomous', 'Neglected'
-//     'Savings': 'Losses',          // Or 'Expenditures'
-//     'running': 'Stopped',         // Or 'Idle', 'Failed'
-//     'calculated': 'Guessed',      // Or 'Assumed', 'Estimated' (if calc. implies precision)
-//     'Total': 'Partial',           // Or 'Individual'
-//     'est.': 'Actual',             // For "estimated"
-//     'cluster': 'IndividualNode',  // Or 'StandaloneUnit'
-//     'costs': 'Revenues',          // Or 'Profits'
+    'managed': 'Unmanaged',       // Or 'Autonomous', 'Neglected'
+    'Savings': 'Losses',          // Or 'Expenditures'
+    'running': 'Stopped',         // Or 'Idle', 'Failed'
+    'calculated': 'Guessed',      // Or 'Assumed', 'Estimated' (if calc. implies precision)
+    'Total': 'Partial',           // Or 'Individual'
+    'est.': 'Actual',             // For "estimated"
+    'cluster': 'IndividualNode',  // Or 'StandaloneUnit'
+    'costs': 'Revenues',          // Or 'Profits'
 
-//     'CPU': 'CPU',                 // Label for a resource, no direct word antonym
-//     'Memory': 'Memory',           // Label for a resource
-//     'Hours': 'Hours',             // Unit
+    'CPU': 'CPU',                 // Label for a resource, no direct word antonym
+    'Memory': 'Memory',           // Label for a resource
+    'Hours': 'Hours',             // Unit
 
-//     'Updated': 'Outdated',        // Or 'Stale' (for the state of having been updated)
-//     'Last Updated': 'NeverUpdated',// Phrase
-//     'Activity': 'Inactivity',     // Or 'Stasis'
-//     'Autoscaling': 'ManualScaling', // Or 'FixedSize'
-//     'Autoscaling Activity': 'ManualScalingStasis',
+    'Updated': 'Outdated',        // Or 'Stale' (for the state of having been updated)
+    'Last Updated': 'NeverUpdated',// Phrase
+    'Activity': 'Inactivity',     // Or 'Stasis'
+    'Autoscaling': 'ManualScaling', // Or 'FixedSize'
+    'Autoscaling Activity': 'ManualScalingStasis',
 
-//     'Learn': 'Ignore',
-//     'More': 'Less',
-//     'Learn More': 'ViewLess',     // Or 'HideDetails', 'BasicSummary'
+    'Learn': 'Ignore',
+    'More': 'Less',
+    'Learn More': 'ViewLess',     // Or 'HideDetails', 'BasicSummary'
 
-//     'Scaling Up': 'ScalingDown',
-//     'Scale Up': 'ScaleDown',
-//     'Events': 'Nonevents',        // Or 'Inaction', 'Normalcy'
-//     'Continuous': 'Intermittent', // Or 'Sporadic', 'Halted'
-//     'Optimization': 'Degradation',  // Or 'Pessimization'
-//     'Scale Down': 'ScaleUp',
+    'Scaling Up': 'ScalingDown',
+    'Scale Up': 'ScaleDown',
+    'Events': 'Nonevents',        // Or 'Inaction', 'Normalcy'
+    'Continuous': 'Intermittent', // Or 'Sporadic', 'Halted'
+    'Optimization': 'Degradation',  // Or 'Pessimization'
+    'Scale Down': 'ScaleUp',
 
-//     'Revert': 'Persist',          // Or 'Maintain', 'ProceedWith'
-//     'Spots': 'OnDemandInstances', // Or 'FixedPrice' (opposite of interruptible/Karpenter pricing)
-//     'Commitments': 'NoCommitments', // Or 'FlexibleTerms'
-//     'Lower Cost': 'HigherCost',
-//     'Lower': 'Higher',
-//     'Dynamic': 'Static',          // Or 'Fixed'
-//     'Autohealing': 'ManualRepair',  // Or 'FailurePersistence'
+    'Revert': 'Persist',          // Or 'Maintain', 'ProceedWith'
+    'Spots': 'OnDemandInstances', // Or 'FixedPrice' (opposite of interruptible/Karpenter pricing)
+    'Commitments': 'NoCommitments', // Or 'FlexibleTerms'
+    'Lower Cost': 'HigherCost',
+    'Lower': 'Higher',
+    'Dynamic': 'Static',          // Or 'Fixed'
+    'Autohealing': 'ManualRepair',  // Or 'FailurePersistence'
 
-//     'Breakdown': 'Summary',       // Or 'Aggregation', 'Total'
-//     'Lifecycle': 'StaticState',   // Or 'Perpetuity' (opposite of a cycle with stages)
-//     'View': 'Hide',
-//     'By': 'By',                   // Preposition, difficult to get a direct antonym in this context
-//     'Explore': 'Ignore',          // Or 'Overlook'
-//     'graph': 'Table',             // Or 'TextReport', 'RawData'
-//     'Click': 'IgnoreAction',      // Or 'NoClick' (opposite of performing the action)
-//     'zoom': 'Unzoom',             // Or 'ResetView', 'FullView'
-//     'maximum': 'Minimum',
-//     'time frame': 'PointInTime',  // Or 'Instant'
-//     'viewing': 'Hiding',
+    'Breakdown': 'Summary',       // Or 'Aggregation', 'Total'
+    'Lifecycle': 'StaticState',   // Or 'Perpetuity' (opposite of a cycle with stages)
+    'View': 'Hide',
+    'By': 'By',                   // Preposition, difficult to get a direct antonym in this context
+    'Explore': 'Ignore',          // Or 'Overlook'
+    'graph': 'Table',             // Or 'TextReport', 'RawData'
+    'Click': 'IgnoreAction',      // Or 'NoClick' (opposite of performing the action)
+    'zoom': 'Unzoom',             // Or 'ResetView', 'FullView'
+    'maximum': 'Minimum',
+    'time frame': 'PointInTime',  // Or 'Instant'
+    'viewing': 'Hiding',
 
-//     'Information': 'Misinformation', // Or 'Obscurity'
-//     'Created': 'Destroyed',
-//     'Region': 'Global',           // Or 'UndefinedLocation'
-//     'Version': 'Unversioned',     // Or 'GenericProduct'
-//     'Control': 'Uncontrolled',    // Or 'Laissez-faire'
-//     'Plane': 'Plane',             // Difficult to get a good antonym for "Plane" in "Control Plane"
-//     'Control Plane': 'UnmanagedSystem', // Or keep as 'Control Plane'
+    'Information': 'Misinformation', // Or 'Obscurity'
+    'Created': 'Destroyed',
+    'Region': 'Global',           // Or 'UndefinedLocation'
+    'Version': 'Unversioned',     // Or 'GenericProduct'
+    'Control': 'Uncontrolled',    // Or 'Laissez-faire'
+    'Plane': 'Plane',             // Difficult to get a good antonym for "Plane" in "Control Plane"
+    'Control Plane': 'UnmanagedSystem', // Or keep as 'Control Plane'
 
-//     'Enabled': 'Disabled',
+    'Enabled': 'Disabled',
 
-//     // Identifiers and highly specific technical nouns map to themselves
-//     'talshafir-eks-il-dev': 'talshafir-eks-il-dev',
-//     'o-02620eb3': 'o-02620eb3',
-//     'Kubernetes': 'Kubernetes',
-//     'Controller': 'Controller',     // Specific role, an "Uncontroller" isn't standard
-//     'AMI': 'AMI',
-//     'vCPU': 'vCPU',
-//     'GiB': 'GiB',
-//     'Autoscaler': 'ManualScaler', // Component for autoscaling vs manual
-//     'EKS': 'EKS',
-//     'start': 'Stop',
-//     'spot': 'karpenter'
-//     // Version numbers (e.g., v2.0.70) are specific identifiers, not words with antonyms.
-// };
+    // Identifiers and highly specific technical nouns map to themselves
+    'talshafir-eks-il-dev': 'talshafir-eks-il-dev',
+    'o-02620eb3': 'o-02620eb3',
+    'Kubernetes': 'Kubernetes',
+    'Controller': 'Controller',     // Specific role, an "Uncontroller" isn't standard
+    'AMI': 'AMI',
+    'vCPU': 'vCPU',
+    'GiB': 'GiB',
+    'Autoscaler': 'ManualScaler', // Component for autoscaling vs manual
+    'EKS': 'EKS',
+    'start': 'Stop',
+    'spot': 'karpenter'
+    // Version numbers (e.g., v2.0.70) are specific identifiers, not words with antonyms.
+};
 
 
-//     // Convert dictionary to RegExp and replacement format
-//     const regexMap = Object.entries(wordMap).map(([key, value]) => ({
-//         regex: new RegExp(`\\b${key}\\b`, 'gi'),  // match whole word, case-insensitive
-//         replacer: (match) => {
-//             // Preserve case (e.g. "Connect" -> "Disconnect")
-//             if (match[0] === match[0].toUpperCase()) {
-//                 return value[0].toUpperCase() + value.slice(1);
-//             }
-//             return value;
-//         }
-//     }));
+    // Convert dictionary to RegExp and replacement format
+    const regexMap = Object.entries(wordMap).map(([key, value]) => ({
+        regex: new RegExp(`\\b${key}\\b`, 'gi'),  // match whole word, case-insensitive
+        replacer: (match) => {
+            // Preserve case (e.g. "Connect" -> "Disconnect")
+            if (match[0] === match[0].toUpperCase()) {
+                return value[0].toUpperCase() + value.slice(1);
+            }
+            return value;
+        }
+    }));
 
-//     // Replace text in a text node
-//     function replaceText(node) {
-//         let text = node.textContent;
-//         regexMap.forEach(({ regex, replacer }) => {
-//             text = text.replace(regex, replacer);
-//         });
-//         node.textContent = text;
-//     }
+    // Replace text in a text node
+    function replaceText(node) {
+        let text = node.textContent;
+        regexMap.forEach(({ regex, replacer }) => {
+            text = text.replace(regex, replacer);
+        });
+        node.textContent = text;
+    }
 
-//     // Traverse DOM and Shadow DOM
-//     function traverse(node) {
-//         if (node.nodeType === Node.TEXT_NODE) {
-//             replaceText(node);
-//         } else if (node.nodeType === Node.ELEMENT_NODE) {
-//             if (node.shadowRoot) {
-//                 traverse(node.shadowRoot);
-//             }
-//             node.childNodes.forEach(traverse);
-//         }
-//     }
+    // Traverse DOM and Shadow DOM
+    function traverse(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            replaceText(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.shadowRoot) {
+                traverse(node.shadowRoot);
+            }
+            node.childNodes.forEach(traverse);
+        }
+    }
 
-//     // Observe changes (mutation observer)
-//     const observer = new MutationObserver((mutations) => {
-//         mutations.forEach((mutation) => {
-//             mutation.addedNodes.forEach((node) => {
-//                 traverse(node);
-//             });
-//         });
-//     });
+    // Observe changes (mutation observer)
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                traverse(node);
+            });
+        });
+    });
 
-//     // Start observing the entire document and any shadow roots
-//     function observeNode(node) {
-//         if (!node) return;
+    // Start observing the entire document and any shadow roots
+    function observeNode(node) {
+        if (!node) return;
 
-//         traverse(node);
-//         observer.observe(node, {
-//             childList: true,
-//             subtree: true
-//         });
+        traverse(node);
+        observer.observe(node, {
+            childList: true,
+            subtree: true
+        });
 
-//         // Also observe shadow roots
-//         if (node.shadowRoot) {
-//             observeNode(node.shadowRoot);
-//         }
+        // Also observe shadow roots
+        if (node.shadowRoot) {
+            observeNode(node.shadowRoot);
+        }
 
-//         node.querySelectorAll('*').forEach(el => {
-//             if (el.shadowRoot) {
-//                 observeNode(el.shadowRoot);
-//             }
-//         });
-//     }
+        node.querySelectorAll('*').forEach(el => {
+            if (el.shadowRoot) {
+                observeNode(el.shadowRoot);
+            }
+        });
+    }
 
-//     // Initial observe
-//     observeNode(document.body);
-// })();
+    // Initial observe
+    observeNode(document.body);
+})();
 
 // // #endregion Or Maman
 
@@ -464,330 +464,330 @@
 
 // #region itzik
 
-// ==UserScript==
-// @name         Enhanced Random Pokémon Ads (with Real Images)
-// @namespace    http://tampermonkey.net/
-// @version      0.3
-// @description  Displays a more beautiful and interactive random Pokémon-themed ad on any page, now with actual Pokémon images.
-// @author       Your Name
-// @match        *://*/*
-// @grant        none
-// @run-at       document-idle
-// ==/UserScript==
+// // ==UserScript==
+// // @name         Enhanced Random Pokémon Ads (with Real Images)
+// // @namespace    http://tampermonkey.net/
+// // @version      0.3
+// // @description  Displays a more beautiful and interactive random Pokémon-themed ad on any page, now with actual Pokémon images.
+// // @author       Your Name
+// // @match        *://*/*
+// // @grant        none
+// // @run-at       document-idle
+// // ==/UserScript==
 
-(function() {
-    'use_strict';
+// (function() {
+//     'use_strict';
 
-    // --- Configuration ---
-    const POKEMON_ADS = [
-        {
-            name: "PokéNet Max",
-            text: "Blazing fast connections for every Trainer! Stream battles, trade globally, and never miss a rare spawn.",
-            link: "#pokenet",
-            // Using Porygon for a network-themed ad
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/137.png", // Porygon
-            themeColor: "#F95587", // Porygon's pink
-            buttonText: "Get Connected!"
-        },
-        {
-            name: "Pikachu Power Shakes",
-            text: "Electrify your mornings! Packed with vitamins and a shocking amount of flavor.",
-            link: "#pikashake",
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", // Pikachu
-            themeColor: "#FFDE00", // Pikachu Yellow
-            buttonText: "Try One Today!"
-        },
-        {
-            name: "Oak's Advanced Academy",
-            text: "Unlock your potential! Master advanced battle strategies and Pokémon research.",
-            link: "#oakacademy",
-            // Using Alakazam, known for high intelligence
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png", // Alakazam
-            themeColor: "#F8D030", // Alakazam's Yellow/Brown
-            buttonText: "Enroll Now!"
-        },
-        {
-            name: "Snorlax Serene Slumber Mattress",
-            text: "The ultimate sleep experience. Wake up feeling as refreshed as a Snorlax after a good nap!",
-            link: "#snorlaxsleep",
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png", // Snorlax
-            themeColor: "#A8A878", // Snorlax's Normal type color, or a sleepy blue: #81D4FA
-            buttonText: "Sleep Better!"
-        },
-        {
-            name: "Charizard's Ember Grill",
-            text: "Taste the fire! Perfectly grilled delights that pack a punch of flavor.",
-            link: "#charizardgrill",
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", // Charizard
-            themeColor: "#FF7043", // Fiery Orange
-            buttonText: "Order Now!"
-        },
-        {
-            name: "Jigglypuff's Karaoke Club",
-            text: "Sing your heart out! Or, let Jigglypuff do it for you... maybe bring earplugs.",
-            link: "#jigglykaraoke",
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png", // Jigglypuff
-            themeColor: "#F48FB1", // Pink
-            buttonText: "Join the Fun!"
-        },
-        {
-            name: "Magikarp's Splash Zone",
-            text: "Surprisingly fun! Get ready for a splashing good time. It's more exciting than it sounds!",
-            link: "#magikarpsplash",
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png", // Magikarp
-            themeColor: "#FFB74D", // Orange
-            buttonText: "Dive In!"
-        },
-        {
-            name: "Elite Four Fitness",
-            text: "Train like a champion! Get fit, strong, and ready to take on any challenge.",
-            link: "#elitefitness",
-            // Using Machamp, known for its strength
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png", // Machamp
-            themeColor: "#C03028", // Fighting type red/brown
-            buttonText: "Start Training!"
-        }
-    ];
+//     // --- Configuration ---
+//     const POKEMON_ADS = [
+//         {
+//             name: "PokéNet Max",
+//             text: "Blazing fast connections for every Trainer! Stream battles, trade globally, and never miss a rare spawn.",
+//             link: "#pokenet",
+//             // Using Porygon for a network-themed ad
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/137.png", // Porygon
+//             themeColor: "#F95587", // Porygon's pink
+//             buttonText: "Get Connected!"
+//         },
+//         {
+//             name: "Pikachu Power Shakes",
+//             text: "Electrify your mornings! Packed with vitamins and a shocking amount of flavor.",
+//             link: "#pikashake",
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", // Pikachu
+//             themeColor: "#FFDE00", // Pikachu Yellow
+//             buttonText: "Try One Today!"
+//         },
+//         {
+//             name: "Oak's Advanced Academy",
+//             text: "Unlock your potential! Master advanced battle strategies and Pokémon research.",
+//             link: "#oakacademy",
+//             // Using Alakazam, known for high intelligence
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png", // Alakazam
+//             themeColor: "#F8D030", // Alakazam's Yellow/Brown
+//             buttonText: "Enroll Now!"
+//         },
+//         {
+//             name: "Snorlax Serene Slumber Mattress",
+//             text: "The ultimate sleep experience. Wake up feeling as refreshed as a Snorlax after a good nap!",
+//             link: "#snorlaxsleep",
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png", // Snorlax
+//             themeColor: "#A8A878", // Snorlax's Normal type color, or a sleepy blue: #81D4FA
+//             buttonText: "Sleep Better!"
+//         },
+//         {
+//             name: "Charizard's Ember Grill",
+//             text: "Taste the fire! Perfectly grilled delights that pack a punch of flavor.",
+//             link: "#charizardgrill",
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", // Charizard
+//             themeColor: "#FF7043", // Fiery Orange
+//             buttonText: "Order Now!"
+//         },
+//         {
+//             name: "Jigglypuff's Karaoke Club",
+//             text: "Sing your heart out! Or, let Jigglypuff do it for you... maybe bring earplugs.",
+//             link: "#jigglykaraoke",
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png", // Jigglypuff
+//             themeColor: "#F48FB1", // Pink
+//             buttonText: "Join the Fun!"
+//         },
+//         {
+//             name: "Magikarp's Splash Zone",
+//             text: "Surprisingly fun! Get ready for a splashing good time. It's more exciting than it sounds!",
+//             link: "#magikarpsplash",
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png", // Magikarp
+//             themeColor: "#FFB74D", // Orange
+//             buttonText: "Dive In!"
+//         },
+//         {
+//             name: "Elite Four Fitness",
+//             text: "Train like a champion! Get fit, strong, and ready to take on any challenge.",
+//             link: "#elitefitness",
+//             // Using Machamp, known for its strength
+//             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png", // Machamp
+//             themeColor: "#C03028", // Fighting type red/brown
+//             buttonText: "Start Training!"
+//         }
+//     ];
 
-    const AD_ID = 'pokemon-enhanced-ad-container';
-    const AD_APPEAR_DELAY_MS = 2500; // Delay before the ad appears
+//     const AD_ID = 'pokemon-enhanced-ad-container';
+//     const AD_APPEAR_DELAY_MS = 2500; // Delay before the ad appears
 
-    // --- Helper Functions ---
+//     // --- Helper Functions ---
 
-    /**
-     * Selects a random item from an array.
-     * @param {Array} arr - The array to select from.
-     * @returns {*} A random item from the array.
-     */
-    function getRandomItem(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
+//     /**
+//      * Selects a random item from an array.
+//      * @param {Array} arr - The array to select from.
+//      * @returns {*} A random item from the array.
+//      */
+//     function getRandomItem(arr) {
+//         return arr[Math.floor(Math.random() * arr.length)];
+//     }
 
-    /**
-     * Creates and displays the Pokémon ad.
-     */
-    function displayPokemonAd() {
-        if (document.getElementById(AD_ID)) {
-            return; // Don't show ad if one already exists
-        }
+//     /**
+//      * Creates and displays the Pokémon ad.
+//      */
+//     function displayPokemonAd() {
+//         if (document.getElementById(AD_ID)) {
+//             return; // Don't show ad if one already exists
+//         }
 
-        const selectedAd = getRandomItem(POKEMON_ADS);
+//         const selectedAd = getRandomItem(POKEMON_ADS);
 
-        // --- Create Ad Container ---
-        const adContainer = document.createElement('div');
-        adContainer.id = AD_ID;
-        Object.assign(adContainer.style, {
-            position: 'fixed',
-            bottom: '25px',
-            right: '-400px', // Start off-screen for slide-in
-            width: '360px',
-            backgroundColor: '#FFFFFF',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05)',
-            zIndex: '10000',
-            fontFamily: "'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-            color: '#333',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden', // Important for border-radius on children
-            transition: 'right 0.7s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease-out', // Combined transition
-            opacity: '0' // Start transparent for fade-in
-        });
+//         // --- Create Ad Container ---
+//         const adContainer = document.createElement('div');
+//         adContainer.id = AD_ID;
+//         Object.assign(adContainer.style, {
+//             position: 'fixed',
+//             bottom: '25px',
+//             right: '-400px', // Start off-screen for slide-in
+//             width: '360px',
+//             backgroundColor: '#FFFFFF',
+//             borderRadius: '12px',
+//             boxShadow: '0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05)',
+//             zIndex: '10000',
+//             fontFamily: "'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+//             color: '#333',
+//             display: 'flex',
+//             flexDirection: 'column',
+//             overflow: 'hidden', // Important for border-radius on children
+//             transition: 'right 0.7s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease-out', // Combined transition
+//             opacity: '0' // Start transparent for fade-in
+//         });
 
-        // --- Ad Header (for a colored bar) ---
-        const adHeader = document.createElement('div');
-        Object.assign(adHeader.style, {
-            backgroundColor: selectedAd.themeColor || '#FFCB05', // Use ad-specific theme or default yellow
-            padding: '8px 15px', // Reduced padding slightly for a sleeker header
-            borderTopLeftRadius: '12px',
-            borderTopRightRadius: '12px',
-            minHeight: '30px', // Ensure header has some height even if empty for close button placement
-            position: 'relative' // For absolute positioning of the close button within it
-        });
+//         // --- Ad Header (for a colored bar) ---
+//         const adHeader = document.createElement('div');
+//         Object.assign(adHeader.style, {
+//             backgroundColor: selectedAd.themeColor || '#FFCB05', // Use ad-specific theme or default yellow
+//             padding: '8px 15px', // Reduced padding slightly for a sleeker header
+//             borderTopLeftRadius: '12px',
+//             borderTopRightRadius: '12px',
+//             minHeight: '30px', // Ensure header has some height even if empty for close button placement
+//             position: 'relative' // For absolute positioning of the close button within it
+//         });
 
-        // --- Close Button ---
-        const closeButton = document.createElement('button');
-        closeButton.innerHTML = '&times;'; // HTML entity for 'X'
-        Object.assign(closeButton.style, {
-            position: 'absolute',
-            top: '50%', // Center vertically
-            right: '10px',
-            transform: 'translateY(-50%)', // Adjust for vertical centering
-            background: 'rgba(0,0,0,0.15)', // Slightly more visible background
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '50%',
-            width: '28px',
-            height: '28px',
-            fontSize: '20px',
-            lineHeight: '28px', // Ensure 'X' is centered in the button
-            textAlign: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.2)', // Softer shadow
-            transition: 'background-color 0.2s ease, transform 0.2s ease'
-        });
-        closeButton.onmouseover = () => {
-            closeButton.style.backgroundColor = 'rgba(0,0,0,0.3)';
-            closeButton.style.transform = 'translateY(-50%) scale(1.1)';
-        };
-        closeButton.onmouseout = () => {
-            closeButton.style.backgroundColor = 'rgba(0,0,0,0.15)';
-            closeButton.style.transform = 'translateY(-50%) scale(1)';
-        };
-        closeButton.onclick = function() {
-            adContainer.style.opacity = '0';
-            adContainer.style.right = '-400px'; // Slide out
-            setTimeout(() => {
-                if (adContainer.parentNode) {
-                    adContainer.parentNode.removeChild(adContainer);
-                }
-            }, 700); // Remove after animation
-        };
-        adHeader.appendChild(closeButton);
+//         // --- Close Button ---
+//         const closeButton = document.createElement('button');
+//         closeButton.innerHTML = '&times;'; // HTML entity for 'X'
+//         Object.assign(closeButton.style, {
+//             position: 'absolute',
+//             top: '50%', // Center vertically
+//             right: '10px',
+//             transform: 'translateY(-50%)', // Adjust for vertical centering
+//             background: 'rgba(0,0,0,0.15)', // Slightly more visible background
+//             color: '#FFFFFF',
+//             border: 'none',
+//             borderRadius: '50%',
+//             width: '28px',
+//             height: '28px',
+//             fontSize: '20px',
+//             lineHeight: '28px', // Ensure 'X' is centered in the button
+//             textAlign: 'center',
+//             cursor: 'pointer',
+//             boxShadow: '0 1px 3px rgba(0,0,0,0.2)', // Softer shadow
+//             transition: 'background-color 0.2s ease, transform 0.2s ease'
+//         });
+//         closeButton.onmouseover = () => {
+//             closeButton.style.backgroundColor = 'rgba(0,0,0,0.3)';
+//             closeButton.style.transform = 'translateY(-50%) scale(1.1)';
+//         };
+//         closeButton.onmouseout = () => {
+//             closeButton.style.backgroundColor = 'rgba(0,0,0,0.15)';
+//             closeButton.style.transform = 'translateY(-50%) scale(1)';
+//         };
+//         closeButton.onclick = function() {
+//             adContainer.style.opacity = '0';
+//             adContainer.style.right = '-400px'; // Slide out
+//             setTimeout(() => {
+//                 if (adContainer.parentNode) {
+//                     adContainer.parentNode.removeChild(adContainer);
+//                 }
+//             }, 700); // Remove after animation
+//         };
+//         adHeader.appendChild(closeButton);
 
-        // --- Ad Content Area (Image + Text) ---
-        const contentArea = document.createElement('div');
-        Object.assign(contentArea.style, {
-            display: 'flex',
-            padding: '15px', // Slightly reduced padding
-            alignItems: 'center', // Vertically center image with text block
-            gap: '15px' // Space between image and text block
-        });
+//         // --- Ad Content Area (Image + Text) ---
+//         const contentArea = document.createElement('div');
+//         Object.assign(contentArea.style, {
+//             display: 'flex',
+//             padding: '15px', // Slightly reduced padding
+//             alignItems: 'center', // Vertically center image with text block
+//             gap: '15px' // Space between image and text block
+//         });
 
-        // --- Pokémon Image ---
-        const adImage = document.createElement('img');
-        adImage.src = selectedAd.imageUrl;
-        adImage.alt = selectedAd.name || "Pokémon Ad Image"; // Alt text for accessibility
-        Object.assign(adImage.style, {
-            width: '80px',
-            height: '80px',
-            borderRadius: '8px',
-            objectFit: 'contain', // Use 'contain' to ensure the whole Pokémon is visible, 'cover' might crop
-            flexShrink: '0',
-            backgroundColor: '#f0f0f0' // A light background for the image area if transparent PNG
-        });
-        // Handle image loading errors
-        adImage.onerror = function() {
-            this.src = 'https://placehold.co/80x80/CCCCCC/FFFFFF?text=Error'; // Fallback placeholder
-            this.alt = 'Image failed to load';
-        };
-
-
-        // --- Text Block (Title, Description, Button) ---
-        const textBlock = document.createElement('div');
-        Object.assign(textBlock.style, {
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px', // Reduced gap
-            flexGrow: '1'
-        });
-
-        // --- Ad Title ---
-        const adTitle = document.createElement('h3');
-        adTitle.textContent = selectedAd.name;
-        Object.assign(adTitle.style, {
-            margin: '0',
-            fontSize: '17px', // Slightly smaller
-            fontWeight: '700', // Bolder
-            color: selectedAd.themeColor || '#2c3e50' // Darker default title color
-        });
-
-        // --- Ad Description ---
-        const adTextElement = document.createElement('p');
-        adTextElement.textContent = selectedAd.text;
-        Object.assign(adTextElement.style, {
-            margin: '0',
-            fontSize: '13px', // Slightly smaller
-            lineHeight: '1.45',
-            color: '#4A4A4A' // Slightly darker text
-        });
-
-        // --- "Learn More" Button ---
-        const learnMoreButton = document.createElement('a');
-        learnMoreButton.href = selectedAd.link;
-        learnMoreButton.textContent = selectedAd.buttonText || 'Learn More';
-        learnMoreButton.target = '_blank'; // Open in new tab
-        Object.assign(learnMoreButton.style, {
-            display: 'inline-block',
-            padding: '8px 12px', // Slightly smaller button
-            backgroundColor: selectedAd.themeColor || '#FFCB05',
-            color: (selectedAd.themeColor && isColorDark(selectedAd.themeColor)) ? '#FFFFFF' : '#212121',
-            borderRadius: '6px',
-            textDecoration: 'none',
-            textAlign: 'center',
-            fontWeight: '600', // Bolder button text
-            fontSize: '13px', // Slightly smaller
-            marginTop: '8px',
-            transition: 'filter 0.2s ease, transform 0.2s ease', // Changed to filter for brightness
-            alignSelf: 'flex-start'
-        });
-        learnMoreButton.onmouseover = () => {
-            learnMoreButton.style.filter = 'brightness(90%)';
-            learnMoreButton.style.transform = 'translateY(-1px)'; // Smaller lift
-        };
-        learnMoreButton.onmouseout = () => {
-            learnMoreButton.style.filter = 'brightness(100%)';
-            learnMoreButton.style.transform = 'translateY(0)';
-        };
+//         // --- Pokémon Image ---
+//         const adImage = document.createElement('img');
+//         adImage.src = selectedAd.imageUrl;
+//         adImage.alt = selectedAd.name || "Pokémon Ad Image"; // Alt text for accessibility
+//         Object.assign(adImage.style, {
+//             width: '80px',
+//             height: '80px',
+//             borderRadius: '8px',
+//             objectFit: 'contain', // Use 'contain' to ensure the whole Pokémon is visible, 'cover' might crop
+//             flexShrink: '0',
+//             backgroundColor: '#f0f0f0' // A light background for the image area if transparent PNG
+//         });
+//         // Handle image loading errors
+//         adImage.onerror = function() {
+//             this.src = 'https://placehold.co/80x80/CCCCCC/FFFFFF?text=Error'; // Fallback placeholder
+//             this.alt = 'Image failed to load';
+//         };
 
 
-        // --- Assemble the Ad ---
-        textBlock.appendChild(adTitle);
-        textBlock.appendChild(adTextElement);
-        textBlock.appendChild(learnMoreButton);
+//         // --- Text Block (Title, Description, Button) ---
+//         const textBlock = document.createElement('div');
+//         Object.assign(textBlock.style, {
+//             display: 'flex',
+//             flexDirection: 'column',
+//             gap: '6px', // Reduced gap
+//             flexGrow: '1'
+//         });
 
-        contentArea.appendChild(adImage);
-        contentArea.appendChild(textBlock);
+//         // --- Ad Title ---
+//         const adTitle = document.createElement('h3');
+//         adTitle.textContent = selectedAd.name;
+//         Object.assign(adTitle.style, {
+//             margin: '0',
+//             fontSize: '17px', // Slightly smaller
+//             fontWeight: '700', // Bolder
+//             color: selectedAd.themeColor || '#2c3e50' // Darker default title color
+//         });
 
-        adContainer.appendChild(adHeader);
-        adContainer.appendChild(contentArea);
+//         // --- Ad Description ---
+//         const adTextElement = document.createElement('p');
+//         adTextElement.textContent = selectedAd.text;
+//         Object.assign(adTextElement.style, {
+//             margin: '0',
+//             fontSize: '13px', // Slightly smaller
+//             lineHeight: '1.45',
+//             color: '#4A4A4A' // Slightly darker text
+//         });
+
+//         // --- "Learn More" Button ---
+//         const learnMoreButton = document.createElement('a');
+//         learnMoreButton.href = selectedAd.link;
+//         learnMoreButton.textContent = selectedAd.buttonText || 'Learn More';
+//         learnMoreButton.target = '_blank'; // Open in new tab
+//         Object.assign(learnMoreButton.style, {
+//             display: 'inline-block',
+//             padding: '8px 12px', // Slightly smaller button
+//             backgroundColor: selectedAd.themeColor || '#FFCB05',
+//             color: (selectedAd.themeColor && isColorDark(selectedAd.themeColor)) ? '#FFFFFF' : '#212121',
+//             borderRadius: '6px',
+//             textDecoration: 'none',
+//             textAlign: 'center',
+//             fontWeight: '600', // Bolder button text
+//             fontSize: '13px', // Slightly smaller
+//             marginTop: '8px',
+//             transition: 'filter 0.2s ease, transform 0.2s ease', // Changed to filter for brightness
+//             alignSelf: 'flex-start'
+//         });
+//         learnMoreButton.onmouseover = () => {
+//             learnMoreButton.style.filter = 'brightness(90%)';
+//             learnMoreButton.style.transform = 'translateY(-1px)'; // Smaller lift
+//         };
+//         learnMoreButton.onmouseout = () => {
+//             learnMoreButton.style.filter = 'brightness(100%)';
+//             learnMoreButton.style.transform = 'translateY(0)';
+//         };
 
 
-        // --- Add to Page ---
-        document.body.appendChild(adContainer);
+//         // --- Assemble the Ad ---
+//         textBlock.appendChild(adTitle);
+//         textBlock.appendChild(adTextElement);
+//         textBlock.appendChild(learnMoreButton);
 
-        // --- Trigger Animation ---
-        setTimeout(() => {
-            adContainer.style.opacity = '1';
-            adContainer.style.right = '25px';
-        }, 100);
-    }
+//         contentArea.appendChild(adImage);
+//         contentArea.appendChild(textBlock);
 
-    /**
-     * Helper function to determine if a color is dark (for text contrast).
-     * @param {string} colorHex - Hex color string (e.g., "#FF0000").
-     * @returns {boolean} True if the color is considered dark.
-     */
-    function isColorDark(colorHex) {
-        if (!colorHex) return false;
-        const hex = colorHex.replace("#", "");
-        let r, g, b;
-        if (hex.length === 3) {
-            r = parseInt(hex.substring(0, 1) + hex.substring(0, 1), 16);
-            g = parseInt(hex.substring(1, 2) + hex.substring(1, 2), 16);
-            b = parseInt(hex.substring(2, 3) + hex.substring(2, 3), 16);
-        } else if (hex.length === 6) {
-            r = parseInt(hex.substring(0, 2), 16);
-            g = parseInt(hex.substring(2, 4), 16);
-            b = parseInt(hex.substring(4, 6), 16);
-        } else {
-            return false; // Invalid hex length
-        }
-        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-        return luma < 128;
-    }
+//         adContainer.appendChild(adHeader);
+//         adContainer.appendChild(contentArea);
 
 
-    // --- Main Execution ---
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
-    } else {
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
-        });
-    }
+//         // --- Add to Page ---
+//         document.body.appendChild(adContainer);
 
-})();
+//         // --- Trigger Animation ---
+//         setTimeout(() => {
+//             adContainer.style.opacity = '1';
+//             adContainer.style.right = '25px';
+//         }, 100);
+//     }
+
+//     /**
+//      * Helper function to determine if a color is dark (for text contrast).
+//      * @param {string} colorHex - Hex color string (e.g., "#FF0000").
+//      * @returns {boolean} True if the color is considered dark.
+//      */
+//     function isColorDark(colorHex) {
+//         if (!colorHex) return false;
+//         const hex = colorHex.replace("#", "");
+//         let r, g, b;
+//         if (hex.length === 3) {
+//             r = parseInt(hex.substring(0, 1) + hex.substring(0, 1), 16);
+//             g = parseInt(hex.substring(1, 2) + hex.substring(1, 2), 16);
+//             b = parseInt(hex.substring(2, 3) + hex.substring(2, 3), 16);
+//         } else if (hex.length === 6) {
+//             r = parseInt(hex.substring(0, 2), 16);
+//             g = parseInt(hex.substring(2, 4), 16);
+//             b = parseInt(hex.substring(4, 6), 16);
+//         } else {
+//             return false; // Invalid hex length
+//         }
+//         const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+//         return luma < 128;
+//     }
+
+
+//     // --- Main Execution ---
+//     if (document.readyState === 'complete' || document.readyState === 'interactive') {
+//         setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
+//     } else {
+//         window.addEventListener('DOMContentLoaded', () => {
+//             setTimeout(displayPokemonAd, AD_APPEAR_DELAY_MS);
+//         });
+//     }
+
+// })();
 
 
 // #endregion itzik
