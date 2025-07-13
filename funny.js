@@ -1,3 +1,25 @@
+// ==UserScript==
+// @name         Hidden Background Audio
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Plays hidden audio from YouTube in the background
+// @author       Kilo Code
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube.com/embed/rZP7kWOMPzI?autoplay=1&loop=1&playlist=rZP7kWOMPzI';
+    iframe.width = 0;
+    iframe.height = 0;
+    iframe.frameBorder = 0;
+    iframe.setAttribute('allow', 'autoplay');
+    document.body.appendChild(iframe);
+})();
+
 // (function() {
 //     'use strict';
 
